@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,10 @@ use Illuminate\Support\Facades\Config;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    /** @phpstan-use HasFactory<UserFactory> */
+    use HasFactory;
+
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
