@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\SystemRoleEnum;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -54,5 +55,10 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(SystemRoleEnum::SUPER_ADMIN->value);
     }
 }
