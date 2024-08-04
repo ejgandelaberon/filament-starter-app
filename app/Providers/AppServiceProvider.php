@@ -26,11 +26,12 @@ class AppServiceProvider extends ServiceProvider
     {
         $filamentConfigurations->boot();
 
-        Gate::before(function (User $user) {
+        Gate::before(function (User $user): ?bool {
             if ($user->isSuperAdmin()) {
                 return true;
             }
 
+            return null;
         });
     }
 }
