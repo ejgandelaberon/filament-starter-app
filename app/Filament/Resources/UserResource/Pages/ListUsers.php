@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use App\Enums\SystemRoleEnum;
 use App\Filament\Resources\UserResource;
 use App\Models\User;
 use Exception;
@@ -13,6 +14,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class ListUsers extends ListRecords
 {
@@ -39,7 +41,14 @@ class ListUsers extends ListRecords
                 })
                 ->action(function (Actions\Action $action): void {
                     try {
-                        User::factory()->create();
+                        /** @var User $user */
+                        $user = User::factory()->create();
+                        $user->assignRole(
+                            Role::whereNot('name', SystemRoleEnum::SUPER_ADMIN->value)
+                                ->inRandomOrder()
+                                ->firstOrFail()
+                        );
+
                         $action->success();
                     } catch (Exception) {
                         $action->halt();
