@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserResource extends Resource implements HasShieldPermissions
 {
@@ -105,7 +106,15 @@ class UserResource extends Resource implements HasShieldPermissions
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->using(static function (Collection $records): void {
+                            /** @var Collection<int, User> $users */
+                            $users = $records;
+
+                            $users
+                                ->reject(fn (User $record): bool => $record->isSuperAdmin() || $record->is(auth()->user()))
+                                ->each(fn (User $record): ?bool => $record->delete());
+                        }),
                 ]),
             ]);
     }
