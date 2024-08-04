@@ -43,11 +43,12 @@ class UserPolicy
         return $user->can('update_user');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user): bool
+    public function delete(User $user, User $targetUser): bool
     {
+        if ($targetUser->isSuperAdmin() || $targetUser->is($user)) {
+            return false;
+        }
+
         return $user->can('delete_user');
     }
 

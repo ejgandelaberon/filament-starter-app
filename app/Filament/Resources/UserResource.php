@@ -100,7 +100,8 @@ class UserResource extends Resource implements HasShieldPermissions
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->disabled(fn ($record) => $record->isSuperAdmin() || $record->is(auth()->user())),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
