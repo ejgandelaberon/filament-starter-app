@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\SystemRoleEnum;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Spatie\Permission\Models\Role;
@@ -49,6 +50,10 @@ class RolePolicy
      */
     public function delete(User $user, Role $role): bool
     {
+        if (in_array($role->name, SystemRoleEnum::values(), true)) {
+            return false;
+        }
+
         return $user->can('delete_role');
     }
 
