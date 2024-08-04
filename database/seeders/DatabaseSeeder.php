@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
 
         Artisan::call('shield:generate', [
             '--all' => true,
+            '--ignore-existing-policies' => true,
         ]);
 
         Artisan::call('shield:super-admin', [
