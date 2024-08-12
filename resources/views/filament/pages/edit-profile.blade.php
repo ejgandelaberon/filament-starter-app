@@ -1,9 +1,9 @@
 <x-filament-panels::page>
-    <x-filament-panels::form id="profileForm" wire:submit="save">
-        {{ $this->profileForm }}
+    <x-filament-panels::form id="form" wire:submit="save">
+        {{ $this->form }}
     </x-filament-panels::form>
 
-    <x-filament-panels::form id="twoFactorAuthForm" wire:submit="save2fa">
+    <x-filament-panels::form id="twoFactorAuthForm" wire:submit="confirm">
         {{ $this->twoFactorAuthForm }}
     </x-filament-panels::form>
 </x-filament-panels::page>
