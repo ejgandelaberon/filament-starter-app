@@ -13,7 +13,8 @@
         "laravel/jetstream": "^5.1.4",
         "laravel/sanctum": "^4.0.2",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.5.4"
+        "livewire/livewire": "^3.5.4",
+        "opcodesio/log-viewer": "^3.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23.1",
@@ -42,7 +43,8 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
             "@php artisan filament:upgrade",
-            "@php artisan icons:cache"
+            "@php artisan icons:cache",
+            "@php artisan log-viewer:publish"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
@@ -54,6 +56,20 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
+        ],
+        "pint": [
+            "./vendor/bin/pint"
+        ],
+        "stan": [
+            "./vendor/bin/phpstan analyse --memory-limit=2G --ansi --no-progress --no-interaction --configuration=phpstan.neon"
+        ],
+        "test": [
+            "./vendor/bin/pest --parallel"
+        ],
+        "pr": [
+            "@composer pint",
+            "@composer stan",
+            "@composer test"
         ]
     },
     "extra": {
