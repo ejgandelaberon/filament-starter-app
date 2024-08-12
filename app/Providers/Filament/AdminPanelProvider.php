@@ -11,6 +11,7 @@ use Exception;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -69,6 +70,14 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
+            ])
+            ->navigationItems([
+                NavigationItem::make('Log Viewer')
+                    ->sort(0)
+                    ->url(fn () => route('log-viewer.index'))
+                    ->openUrlInNewTab()
+                    ->hidden(fn () => ! auth()->user()?->isSuperAdmin())
+                    ->group('System Management'),
             ]);
     }
 }
