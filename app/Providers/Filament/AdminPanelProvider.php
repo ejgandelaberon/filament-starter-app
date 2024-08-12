@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\LoginPage;
+use App\Filament\Pages\ProfileInformation;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Exception;
 use Filament\Http\Middleware\Authenticate;
@@ -35,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(LoginPage::class)
+            ->profile(ProfileInformation::class, isSimple: false)
             ->colors([
                 'primary' => Color::Indigo,
                 'gray' => Color::Slate,
