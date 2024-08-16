@@ -17,6 +17,7 @@
         "opcodesio/log-viewer": "^3.10"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.23.1",
         "larastan/larastan": "^2.9.8",
         "laravel/pint": "^1.17.2",
