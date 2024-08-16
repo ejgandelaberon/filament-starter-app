@@ -78,6 +78,13 @@ class AdminPanelProvider extends PanelProvider
                     ->openUrlInNewTab()
                     ->hidden(fn () => ! auth()->user()?->isSuperAdmin())
                     ->group('System Management'),
+
+                NavigationItem::make('Laravel Pulse')
+                    ->sort(1)
+                    ->url(fn () => route('pulse'))
+                    ->openUrlInNewTab()
+                    ->hidden(fn () => ! auth()->user()?->isSuperAdmin())
+                    ->group('System Management'),
             ]);
     }
 }
