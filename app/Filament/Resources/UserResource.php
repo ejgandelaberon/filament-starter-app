@@ -77,6 +77,14 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->dateTime()
                     ->sortable(),
 
+                Tables\Columns\IconColumn::make('system')
+                    ->boolean()
+                    ->trueColor('info')
+                    ->falseColor('warning')
+                    ->alignCenter()
+                    ->label('System')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -102,7 +110,8 @@ class UserResource extends Resource implements HasShieldPermissions
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->disabled(fn ($record) => $record->isSuperAdmin() || $record->is(auth()->user())),
+                    ->color(fn ($record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system ? 'gray' : 'danger')
+                    ->disabled(fn ($record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
