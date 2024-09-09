@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\SystemRoleEnum;
+use App\Filament\Resources\ActivityResource;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -52,6 +53,7 @@ class AccessControlSeeder extends Seeder
         Artisan::call('shield:generate', [
             '--all' => true,
             '--ignore-existing-policies' => true,
+            '--exclude' => ActivityResource::class,
         ]);
     }
 
