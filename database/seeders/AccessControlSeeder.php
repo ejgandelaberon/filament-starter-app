@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\SystemRoleEnum;
-use App\Filament\Resources\ActivityResource;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -51,9 +51,8 @@ class AccessControlSeeder extends Seeder
     public function createPermissions(): void
     {
         Artisan::call('shield:generate', [
-            '--all' => true,
+            '--resource' => 'UserResource,RoleResource',
             '--ignore-existing-policies' => true,
-            '--exclude' => ActivityResource::class,
         ]);
     }
 
@@ -65,7 +64,16 @@ class AccessControlSeeder extends Seeder
 
         Role::where('name', SystemRoleEnum::USER->value)
             ->firstOrFail()
-            ->givePermissionTo(Permission::where('name', 'like', 'view_%')->get());
+            ->givePermissionTo(
+                Permission::where('name', 'like', 'view_%')
+                    ->get()
+                    ->reject(function (Permission $permission) {
+                        return Str::of($permission->name)->contains([
+                            'user',
+                            'role',
+                        ]);
+                    })
+            );
     }
 
     public function assignRoles(): void
