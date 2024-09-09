@@ -72,14 +72,16 @@ class AdminPanelProvider extends PanelProvider
                 FilamentShieldPlugin::make(),
             ])
             ->navigationItems([
-                NavigationItem::make('Log Viewer')
+                NavigationItem::make('System Logs')
+                    ->icon('fluentui-clipboard-text-edit-20-o')
                     ->sort(0)
                     ->url(fn () => route('log-viewer.index'))
                     ->openUrlInNewTab()
                     ->hidden(fn () => ! auth()->user()?->isSuperAdmin())
                     ->group('System Management'),
 
-                NavigationItem::make('Laravel Pulse')
+                NavigationItem::make('Performance Metrics')
+                    ->icon('fluentui-desktop-pulse-28-o')
                     ->sort(1)
                     ->url(fn () => route('pulse'))
                     ->openUrlInNewTab()
