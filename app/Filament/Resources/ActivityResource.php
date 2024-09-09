@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ActivityResource\Pages;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\Section;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
 
-class ActivityResource extends Resource
+class ActivityResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Activity::class;
 
@@ -115,5 +116,13 @@ class ActivityResource extends Resource
         return [
             'index' => Pages\ManageActivities::route('/'),
         ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getPermissionPrefixes(): array
+    {
+        return [];
     }
 }
