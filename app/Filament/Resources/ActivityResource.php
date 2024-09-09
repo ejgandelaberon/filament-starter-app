@@ -29,6 +29,11 @@ class ActivityResource extends Resource
 
     protected static ?string $label = 'Activity Log';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperAdmin() ?? false;
+    }
+
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
