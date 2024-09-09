@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use App\Filament\Pages\Concerns\HasTwoFactorAuthentication;
+use App\Filament\Pages\Concerns\InteractsWithBrowserSessions;
+use App\Filament\Pages\Concerns\InteractsWithTwoFactorAuthentication;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
@@ -17,11 +18,13 @@ use Laravel\Jetstream\ConfirmsPasswords;
 
 /**
  * @property Form $twoFactorAuthForm
+ * @property Form $browserSessionsForm
  */
 class ProfileInformation extends EditProfile
 {
     use ConfirmsPasswords;
-    use HasTwoFactorAuthentication;
+    use InteractsWithBrowserSessions;
+    use InteractsWithTwoFactorAuthentication;
 
     public function getView(): string
     {
@@ -39,6 +42,13 @@ class ProfileInformation extends EditProfile
             'twoFactorAuthForm' => $this->form(
                 $this->makeForm()
                     ->schema($this->getTwoFactorAuthenticationFormFields())
+                    ->operation('edit')
+                    ->model($this->getUser())
+                    ->inlineLabel(! static::isSimple()),
+            ),
+            'browserSessionsForm' => $this->form(
+                $this->makeForm()
+                    ->schema($this->getBrowserSessionsFormFields())
                     ->operation('edit')
                     ->model($this->getUser())
                     ->inlineLabel(! static::isSimple()),

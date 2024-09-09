@@ -28,7 +28,7 @@ use Throwable;
 
 use function Filament\Support\is_app_url;
 
-trait HasTwoFactorAuthentication
+trait InteractsWithTwoFactorAuthentication
 {
     public bool $showingQrCode = false;
 
@@ -240,11 +240,16 @@ trait HasTwoFactorAuthentication
                     TextInput::make('password')
                         ->password()
                         ->revealable()
+                        ->required()
+                        ->markAsRequired(false)
                         ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail) {
                             if (! app(ConfirmPassword::class)(app(StatefulGuard::class), Auth::user(), $value)) {
                                 $fail('The password you entered is incorrect.');
                             }
                         })
+                        ->validationMessages([
+                            'required' => __('Password is required.'),
+                        ])
                         ->label(''),
                 ]);
         });
