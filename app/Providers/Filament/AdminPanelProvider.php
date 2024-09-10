@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\LoginPage;
+use App\Filament\Pages\EditTeamProfile;
 use App\Filament\Pages\ProfileInformation;
+use App\Filament\Pages\RegisterTeam;
+use App\Models\Team;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Exception;
 use Filament\Http\Middleware\Authenticate;
@@ -38,6 +41,9 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(LoginPage::class)
             ->profile(ProfileInformation::class, isSimple: false)
+            ->tenant(Team::class)
+            ->tenantRegistration(RegisterTeam::class)
+            ->tenantProfile(EditTeamProfile::class)
             ->colors([
                 'primary' => Color::Indigo,
                 'gray' => Color::Slate,

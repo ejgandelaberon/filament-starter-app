@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\SystemRoleEnum;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -32,10 +33,16 @@ class AccessControlSeeder extends Seeder
     {
         $domain = Config::string('app.domain');
 
-        User::factory()->create([
+        $superAdmin = User::factory()->create([
             'name' => 'Super Admin',
             'email' => "superadmin$domain",
             'system' => true,
+        ]);
+
+        Team::factory()->create([
+            'name' => 'System Administrator',
+            'user_id' => $superAdmin->id,
+            'personal_team' => true,
         ]);
 
         User::factory()->count(10)->create();

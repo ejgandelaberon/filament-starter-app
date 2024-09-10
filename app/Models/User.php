@@ -8,19 +8,23 @@ namespace App\Models;
 use App\Enums\SystemRoleEnum;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
+use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasTenants
 {
     use HasApiTokens;
 
@@ -29,6 +33,7 @@ class User extends Authenticatable implements FilamentUser
 
     use HasProfilePhoto;
     use HasRoles;
+    use HasTeams;
     use LogsActivity;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -91,5 +96,18 @@ class User extends Authenticatable implements FilamentUser
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnly(['name', 'email']);
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->ownedTeams()->whereKey($tenant)->exists() || $this->teams()->whereKey($tenant)->exists();
+    }
+
+    /**
+     * @return Collection<int, Team>
+     */
+    public function getTenants(Panel $panel): Collection
+    {
+        return $this->allTeams();
     }
 }
