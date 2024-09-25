@@ -14,7 +14,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class UserResource extends Resource implements HasShieldPermissions
 {
@@ -142,5 +144,30 @@ class UserResource extends Resource implements HasShieldPermissions
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getRecordTitleAttribute(): ?string
+    {
+        return 'name';
+    }
+
+    /**
+     * @param  User  $record
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Email' => $record->email,
+            'Verified' => filled($record->email_verified_at) ? 'Yes' : 'No',
+            'Roles' => $record->roles->pluck('name')->join(', '),
+        ];
+    }
+
+    /**
+     * @return Builder<User>
+     */
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['roles']);
     }
 }

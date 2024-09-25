@@ -87,6 +87,8 @@ class AdminPanelProvider extends PanelProvider
                     ->openUrlInNewTab()
                     ->hidden(fn () => ! auth()->user()?->isSuperAdmin())
                     ->group('System Management'),
-            ]);
+            ])
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
+            ->globalSearchFieldKeyBindingSuffix();
     }
 }
