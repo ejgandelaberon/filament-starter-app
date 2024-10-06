@@ -11,7 +11,6 @@ use App\DataTable\InteractsWithDataTable;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
-use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -28,8 +27,6 @@ class DemoPage extends Component
     public function dataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
-            ->query(User::query())
-            ->ajax(route('data'))
             ->order([6, 'desc'])
             ->pagingType(PagingType::FULL)
             ->rowId('id')
@@ -48,5 +45,10 @@ class DemoPage extends Component
                     ->orderable(false),
                 Column::make('id'),
             ]);
+    }
+
+    public function query(): Builder
+    {
+        return User::query();
     }
 }

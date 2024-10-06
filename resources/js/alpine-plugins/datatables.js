@@ -2,7 +2,6 @@ import DataTable from 'datatables.net-dt';
 
 export default (Alpine) => {
     Alpine.data('datatables', ({
-        ajax = null,
         ajaxData = {},
         autoWidth = undefined,
         caption = undefined,
@@ -34,28 +33,16 @@ export default (Alpine) => {
         searchDelay,
         searching,
         serverSide,
-        getRecordsUsing = null,
     }) => ({
         init() {
-            let ajaxCallback = ajax;
-
-            if (getRecordsUsing !== null) {
-                ajaxCallback = async function (data, callback) {
-                    callback({
-                        data: await Livewire.find(livewireId).call(getRecordsUsing),
-                    });
-                };
-            }
-
             this.table = new DataTable(this.$refs.table, {
-                    ajax: {
-                        url: ajaxCallback,
-                        data: ajaxData,
-                        dataSrc: 'data',
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        },
+                    ajax: async function (data, callback) {
+                        callback(
+                            await Livewire.find(livewireId).fetch({
+                                ...data,
+                                ...ajaxData,
+                            })
+                        );
                     },
                     autoWidth,
                     caption,

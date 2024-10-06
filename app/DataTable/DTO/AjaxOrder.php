@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Arrayable;
 /**
  * @implements Arrayable<string, mixed>
  */
-class DataTableOrder implements Arrayable
+class AjaxOrder implements Arrayable
 {
     public function __construct(
         public int $column,
@@ -29,6 +29,9 @@ class DataTableOrder implements Arrayable
         );
     }
 
+    /**
+     * @return array<string, string|int|null>
+     */
     public function toArray(): array
     {
         return [

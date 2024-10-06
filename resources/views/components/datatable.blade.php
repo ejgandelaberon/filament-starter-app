@@ -1,6 +1,5 @@
 <div
     x-data="datatables({
-        ajax: @js($getAjax()),
         ajaxData: @js($getAjaxData()),
         autoWidth: @js($getAutoWidth()),
         caption: @js($getCaption()),
@@ -31,8 +30,7 @@
         searchCols: @js($getSearchCols()),
         searchDelay: @js($getSearchDelay()),
         searching: @js($getSearching()),
-        serverSide: @js($getServerSide()),
-        getRecordsUsing: @js($getGetRecordsUsing()),
+        serverSide: @js($getServerSide())
     })"
     wire:ignore
     class="max-w-7xl w-full h-full border-2 rounded-lg p-4"

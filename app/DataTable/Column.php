@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\DataTable;
 
-use App\DataTable\DTO\DataTableSearch;
+use App\DataTable\DTO\AjaxSearch;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
-use Laravel\SerializableClosure\SerializableClosure;
 
 /**
  * @implements Arrayable<string, mixed>
@@ -25,15 +23,15 @@ class Column implements Arrayable
 
     protected bool $orderable = true;
 
-    protected DataTableSearch $search;
+    protected AjaxSearch $search;
 
     protected string|array|Closure|null $render = null; // @phpstan-ignore-line
 
-    protected ?string $serializedSearchCallback = null;
+    protected ?Closure $searchCallback = null;
 
     final private function __construct(protected string $data)
     {
-        $this->search ??= DataTableSearch::default();
+        $this->search ??= AjaxSearch::default();
     }
 
     public static function make(string $data): static
@@ -50,8 +48,6 @@ class Column implements Arrayable
 
     /**
      * @param  array<string, mixed>  $column
-     *
-     * @throws PhpVersionNotSupportedException
      */
     public static function fromArray(array $column): static
     {
@@ -59,9 +55,9 @@ class Column implements Arrayable
             ->title($column['title'] ?? null)
             ->name($column['name'])
             ->render($column['render'] ?? null)
-            ->searchable($column['searchable'] === 'true')
-            ->orderable($column['orderable'] === 'true')
-            ->search(DataTableSearch::fromArray($column['search']));
+            ->searchable($column['searchable'])
+            ->orderable($column['orderable'])
+            ->search(AjaxSearch::fromArray($column['search']));
     }
 
     public function toArray(): array
@@ -113,9 +109,6 @@ class Column implements Arrayable
         return $this->render;
     }
 
-    /**
-     * @throws PhpVersionNotSupportedException
-     */
     public function searchable(bool $searchable = true, string|Closure|null $query = null): static
     {
         $this->searchable = $searchable;
@@ -144,14 +137,14 @@ class Column implements Arrayable
         return $this->orderable;
     }
 
-    public function search(DataTableSearch $search): static
+    public function search(AjaxSearch $search): static
     {
         $this->search = $search;
 
         return $this;
     }
 
-    public function getSearch(): DataTableSearch
+    public function getSearch(): AjaxSearch
     {
         return $this->search;
     }
@@ -170,18 +163,16 @@ class Column implements Arrayable
 
     /**
      * @param  Closure(Builder<Model>, ?string): Builder<Model>  $callback
-     *
-     * @throws PhpVersionNotSupportedException
      */
     public function searchUsing(Closure $callback): static
     {
-        $this->serializedSearchCallback = serialize(new SerializableClosure($callback));
+        $this->searchCallback = $callback;
 
         return $this;
     }
 
-    public function getSerializedSearchCallback(): ?string
+    public function getSearchCallback(): ?Closure
     {
-        return $this->serializedSearchCallback;
+        return $this->searchCallback;
     }
 }

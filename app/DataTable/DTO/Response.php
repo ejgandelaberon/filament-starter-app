@@ -10,14 +10,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
 use Laravel\SerializableClosure\SerializableClosure;
 
 /**
  * @implements Arrayable<string, mixed>
  */
-class DataTableResponse implements Arrayable
+class Response implements Arrayable
 {
     /**
      * @param  array<string, mixed>  $data
@@ -39,16 +38,16 @@ class DataTableResponse implements Arrayable
         ];
     }
 
-    public static function make(DataTableRequest $request, Builder $query): self
+    public static function make(AjaxData $data, Builder $query): self
     {
-        static::applySearch($query, $request);
-        static::applyOrdering($query, $request);
+        static::applySearch($query, $data);
+        static::applyOrdering($query, $data);
 
-        $paginator = static::paginate($query, $request);
+        $paginator = static::paginate($query, $data);
 
         return new self(
-            draw: $request->draw,
-            data: $paginator->items(),
+            draw: $data->draw,
+            data: collect($paginator->items())->toArray(),
             recordsTotal: $paginator->total(),
             recordsFiltered: $paginator->total(),
         );
@@ -57,18 +56,16 @@ class DataTableResponse implements Arrayable
     /**
      * @param  Builder<Model>  $query
      */
-    protected static function applySearch(Builder $query, DataTableRequest $request): void
+    protected static function applySearch(Builder $query, AjaxData $request): void
     {
-        if ($request->search->value) {
+        if ($request->search?->value) {
             foreach ($request->columns as $column) {
                 if (! $column->isSearchable()) {
                     continue;
                 }
 
-                $columnSearchCallback = $request->columnSearch[$column->getData()] ?? null;
-
-                if ($columnSearchCallback !== null) {
-                    $callback = static::deserializeCallback($columnSearchCallback);
+                if ($column->getSearchCallback() !== null) {
+                    $callback = $column->getSearchCallback();
                     $callback($query, $request->search->value);
 
                     continue;
@@ -99,18 +96,13 @@ class DataTableResponse implements Arrayable
     /**
      * @param  Builder<Model>  $query
      */
-    protected static function applyOrdering(Builder $query, DataTableRequest $request): void
+    protected static function applyOrdering(Builder $query, AjaxData $request): void
     {
         if ($request->order) {
             $orderableColumns = static::orderableColumns($request);
 
             foreach ($request->order as $order) {
-                $column = strval(
-                    Arr::first($orderableColumns, fn (string $column): bool => $column === $order->name)
-                );
-                $direction = $order->dir;
-
-                $query->orderBy($column, $direction);
+                $query->orderBy($orderableColumns[$order->column], $order->dir);
             }
         }
     }
@@ -118,13 +110,13 @@ class DataTableResponse implements Arrayable
     /**
      * @return string[]
      */
-    protected static function orderableColumns(DataTableRequest $request): array
+    protected static function orderableColumns(AjaxData $request): array
     {
         /** @var string[] $orderableColumns */
         $orderableColumns = collect($request->columns)
             ->filter(fn (Column $column): bool => $column->isOrderable())
             ->map(fn (Column $column): ?string => $column->getData())
-            ->toArray();
+            ->all();
 
         return $orderableColumns;
     }
@@ -133,7 +125,7 @@ class DataTableResponse implements Arrayable
      * @param  Builder<Model>  $query
      * @return LengthAwarePaginator<Model>
      */
-    protected static function paginate(Builder $query, DataTableRequest $request): LengthAwarePaginator
+    protected static function paginate(Builder $query, AjaxData $request): LengthAwarePaginator
     {
         $length = $request->length;
         $page = $request->start / $request->length + 1;

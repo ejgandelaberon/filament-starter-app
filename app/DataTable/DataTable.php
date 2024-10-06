@@ -4,22 +4,15 @@ declare(strict_types=1);
 
 namespace App\DataTable;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 
-/**
- * @implements Arrayable<string, mixed>
- */
-class DataTable implements Arrayable, Htmlable
+class DataTable implements Htmlable
 {
     use Concerns\BelongsToLivewire;
     use Concerns\CollectsPublicGetters;
     use Concerns\HasConfig;
-
-    protected Builder $query;
 
     final private function __construct(protected Component $livewire)
     {
@@ -33,34 +26,11 @@ class DataTable implements Arrayable, Htmlable
 
     public function render(): Renderable
     {
-        return view('components.datatable', $this->collectPublicGetters(exclude: [
-            'getModel',
-            'getSerializedCallbacks',
-        ]));
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'data' => $this->getData(),
-            'columns' => $this->getColumns(),
-        ];
+        return view('components.datatable', $this->collectPublicGetters());
     }
 
     public function toHtml(): string
     {
         return $this->render()->render();
-    }
-
-    public function getQuery(): Builder
-    {
-        return $this->query;
-    }
-
-    public function query(Builder $query): DataTable
-    {
-        $this->query = $query;
-
-        return $this;
     }
 }

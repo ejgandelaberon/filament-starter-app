@@ -8,11 +8,10 @@ use App\DataTable\Column;
 use App\DataTable\DTO\ConfigRenderer;
 use App\DataTable\DTO\ConfigSearch;
 use App\DataTable\Enums\PagingType;
-use Illuminate\Support\Arr;
 
 trait HasConfig
 {
-    protected ?string $ajax = null;
+    protected array $ajaxData = [];
 
     protected bool $autoWidth = true;
 
@@ -89,13 +88,6 @@ trait HasConfig
     protected bool $serverSide = true;
 
     /**
-     * @var string[]
-     */
-    protected array $serializedCallbacks = [];
-
-    protected ?string $getRecordsUsing = null;
-
-    /**
      * @param  array<array-key, mixed>  $data
      */
     public function data(array $data): static
@@ -111,9 +103,6 @@ trait HasConfig
     public function columns(array $columns): static
     {
         $this->columns = $columns;
-        $this->serializedCallbacks = Arr::mapWithKeys($columns, fn (Column $column): array => [
-            $column->getData() => $column->getSerializedSearchCallback(),
-        ]);
 
         return $this;
     }
@@ -127,47 +116,27 @@ trait HasConfig
     }
 
     /**
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array<string, mixed>|Column>
      */
-    public function getColumns(): array
+    public function getColumns(bool $raw = true): array
     {
+        if (! $raw) {
+            return $this->columns;
+        }
+
         return array_map(fn (Column $column): array => $column->toArray(), $this->columns);
     }
 
-    public function getRecordsUsing(string $componentMethodName): static
+    public function ajaxData(array $ajaxData): static
     {
-        $this->getRecordsUsing = $componentMethodName;
+        $this->ajaxData = $ajaxData;
 
         return $this;
-    }
-
-    public function getGetRecordsUsing(): ?string
-    {
-        return $this->getRecordsUsing;
-    }
-
-    public function ajax(?string $ajax): static
-    {
-        $this->ajax = $ajax;
-
-        return $this;
-    }
-
-    public function getAjax(): ?string
-    {
-        return $this->ajax;
     }
 
     public function getAjaxData(): array
     {
-        return [
-            'columnSearch' => $this->getSerializedCallbacks(),
-        ];
-    }
-
-    public function getSerializedCallbacks(): array
-    {
-        return $this->serializedCallbacks;
+        return $this->ajaxData;
     }
 
     public function autoWidth(bool $autoWidth = true): static

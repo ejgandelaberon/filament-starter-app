@@ -9,21 +9,26 @@ use Illuminate\Contracts\Support\Arrayable;
 /**
  * @implements Arrayable<string, mixed>
  */
-class DataTableSearch implements Arrayable
+class AjaxSearch implements Arrayable
 {
+    /**
+     * @param  array<array-key, mixed>  $fixed
+     */
     public function __construct(
         public ?string $value,
         public bool $regex,
+        public array $fixed = [],
     ) {}
 
     /**
-     * @param  array{ value: ?string, regex: bool }  $data
+     * @param  array{ value: ?string, regex: bool, fixed?: array<array-key, mixed> }  $data
      */
     public static function fromArray(array $data): self
     {
         return new self(
             value: $data['value'],
             regex: $data['regex'] == 'true',
+            fixed: $data['fixed'] ?? [],
         );
     }
 
@@ -32,6 +37,7 @@ class DataTableSearch implements Arrayable
         return new self(
             value: null,
             regex: false,
+            fixed: [],
         );
     }
 
@@ -40,6 +46,7 @@ class DataTableSearch implements Arrayable
         return [
             'value' => $this->value,
             'regex' => $this->regex,
+            'fixed' => $this->fixed,
         ];
     }
 }
