@@ -36,7 +36,7 @@ readonly class DataTableRequest
             columns: self::createColumns($request),
             order: self::createOrders($request),
             search: self::createDataTableSearch($request),
-            columnSearch: $request->input('columnSearch', []), // @phpstan-ignore-line
+            columnSearch: $request->input('columnSearch', []),
         );
     }
 

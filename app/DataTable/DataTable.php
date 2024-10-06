@@ -7,7 +7,8 @@ namespace App\DataTable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Livewire\Component;
 
 /**
  * @implements Arrayable<string, mixed>
@@ -18,28 +19,20 @@ class DataTable implements Arrayable, Htmlable
     use Concerns\CollectsPublicGetters;
     use Concerns\HasConfig;
 
-    /**
-     * @param  class-string<Model>  $model
-     */
-    final private function __construct(protected string $model)
+    protected Builder $query;
+
+    final private function __construct(protected Component $livewire)
     {
         //
     }
 
-    /**
-     * @param  class-string<Model>  $model
-     */
-    public static function make(string $model): static
+    public static function make(Component $livewire): static
     {
-        return new static($model);
+        return new static($livewire);
     }
 
     public function render(): Renderable
     {
-        //        dd($this->collectPublicGetters(exclude: [
-        //            'getModel',
-        //            'getSerializedCallbacks',
-        //        ]));
         return view('components.datatable', $this->collectPublicGetters(exclude: [
             'getModel',
             'getSerializedCallbacks',
@@ -59,18 +52,15 @@ class DataTable implements Arrayable, Htmlable
         return $this->render()->render();
     }
 
-    /**
-     * @param  class-string<Model>  $model
-     */
-    public function model(string $model): DataTable
+    public function getQuery(): Builder
     {
-        $this->model = $model;
-
-        return $this;
+        return $this->query;
     }
 
-    public function getModel(): string
+    public function query(Builder $query): DataTable
     {
-        return $this->model;
+        $this->query = $query;
+
+        return $this;
     }
 }

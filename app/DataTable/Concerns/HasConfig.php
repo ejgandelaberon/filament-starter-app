@@ -161,7 +161,6 @@ trait HasConfig
     public function getAjaxData(): array
     {
         return [
-            'model' => $this->getModel(),
             'columnSearch' => $this->getSerializedCallbacks(),
         ];
     }

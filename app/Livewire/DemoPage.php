@@ -7,7 +7,7 @@ namespace App\Livewire;
 use App\DataTable\Column;
 use App\DataTable\DataTable;
 use App\DataTable\Enums\PagingType;
-use App\DataTable\HasDataTable;
+use App\DataTable\InteractsWithDataTable;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,24 +18,17 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class DemoPage extends Component
 {
-    use HasDataTable;
+    use InteractsWithDataTable;
 
     public function render(): Renderable
     {
         return view('livewire.demo-page');
     }
 
-    public function model(): string
-    {
-        return User::class;
-    }
-
-    /**
-     * @throws PhpVersionNotSupportedException
-     */
-    public function configureDataTable(DataTable $dataTable): DataTable
+    public function dataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
+            ->query(User::query())
             ->ajax(route('data'))
             ->order([6, 'desc'])
             ->pagingType(PagingType::FULL)
@@ -55,12 +48,5 @@ class DemoPage extends Component
                     ->orderable(false),
                 Column::make('id'),
             ]);
-    }
-
-    public function asyncData(): array // @phpstan-ignore-line
-    {
-        sleep(2);
-
-        return require app_path('DataTable/data/data.php');
     }
 }

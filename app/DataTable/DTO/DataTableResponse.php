@@ -39,11 +39,8 @@ class DataTableResponse implements Arrayable
         ];
     }
 
-    public static function make(DataTableRequest $request): self
+    public static function make(DataTableRequest $request, Builder $query): self
     {
-        /** @var Builder<Model> $query */
-        $query = $request->model::query();
-
         static::applySearch($query, $request);
         static::applyOrdering($query, $request);
 

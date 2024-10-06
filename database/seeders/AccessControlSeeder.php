@@ -38,7 +38,7 @@ class AccessControlSeeder extends Seeder
             'system' => true,
         ]);
 
-        User::factory()->count(10)->create();
+        User::factory(100)->create();
     }
 
     public function createRoles(): void

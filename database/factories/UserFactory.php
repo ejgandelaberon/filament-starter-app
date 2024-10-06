@@ -34,7 +34,7 @@ class UserFactory extends Factory
         return [
             'name' => $name = fake()->name(),
             'email' => Str::slug($name).$domain,
-            'email_verified_at' => now(),
+            'email_verified_at' => $this->faker->dateTimeBetween('-1 year'),
             'password' => static::$password ??= Hash::make('password'),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,

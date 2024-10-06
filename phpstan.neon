@@ -9,8 +9,10 @@ parameters:
     # Level 9 is the highest level
     level: 9
 
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
+    ignoreErrors:
+        - '#Unable to resolve the template type TKey in call to function collect#'
+        - '#Unable to resolve the template type TValue in call to function collect#'
+        - identifier: missingType.generics
 #
 #    excludePaths:
 #        - ./*/*/FileToBeExcluded.php
