@@ -7,7 +7,6 @@ namespace App\DataTable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 
 /**
@@ -18,8 +17,6 @@ class DataTable implements Arrayable, Htmlable
     use Concerns\BelongsToLivewire;
     use Concerns\CollectsPublicGetters;
     use Concerns\HasConfig;
-
-    protected Builder $query;
 
     final private function __construct(protected Component $livewire)
     {
@@ -50,17 +47,5 @@ class DataTable implements Arrayable, Htmlable
     public function toHtml(): string
     {
         return $this->render()->render();
-    }
-
-    public function getQuery(): Builder
-    {
-        return $this->query;
-    }
-
-    public function query(Builder $query): DataTable
-    {
-        $this->query = $query;
-
-        return $this;
     }
 }

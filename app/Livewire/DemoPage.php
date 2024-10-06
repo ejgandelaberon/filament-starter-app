@@ -28,7 +28,6 @@ class DemoPage extends Component
     public function dataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
-            ->query(User::query())
             ->ajax(route('data'))
             ->order([6, 'desc'])
             ->pagingType(PagingType::FULL)
