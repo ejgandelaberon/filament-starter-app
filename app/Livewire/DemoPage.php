@@ -6,6 +6,7 @@ namespace App\Livewire;
 
 use App\DataTable\Column;
 use App\DataTable\DataTable;
+use App\DataTable\Enums\PagingType;
 use App\DataTable\HasDataTable;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
@@ -24,7 +25,7 @@ class DemoPage extends Component
         return view('livewire.demo-page');
     }
 
-    protected function model(): string
+    public function model(): string
     {
         return User::class;
     }
@@ -35,9 +36,12 @@ class DemoPage extends Component
     public function configureDataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
-            // ->data(require app_path('DataTable/data/data.php'))
-            // ->getRecordsUsing('asyncData')
             ->ajax(route('data'))
+            ->order([6, 'desc'])
+            ->pagingType(PagingType::FULL)
+            ->rowId('id')
+            ->scrollY('600px')
+            ->searchDelay(150)
             ->columns([
                 Column::make('name'),
                 Column::make('email'),
@@ -49,6 +53,7 @@ class DemoPage extends Component
                         return $query->orWhereLike('profile_photo_path', "%$search%");
                     })
                     ->orderable(false),
+                Column::make('id'),
             ]);
     }
 

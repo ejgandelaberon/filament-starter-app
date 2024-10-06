@@ -13,7 +13,7 @@ trait HasDataTable
     /**
      * @return class-string<Model>
      */
-    abstract protected function model(): string;
+    abstract public function model(): string;
 
     /**
      * @throws PhpVersionNotSupportedException

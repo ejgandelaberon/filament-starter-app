@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class DataTable implements Arrayable, Htmlable
 {
     use Concerns\BelongsToLivewire;
+    use Concerns\CollectsPublicGetters;
     use Concerns\HasConfig;
 
     /**
@@ -35,17 +36,14 @@ class DataTable implements Arrayable, Htmlable
 
     public function render(): Renderable
     {
-        return view('components.datatable', [
-            'livewireId' => $this->getLivewire(),
-            'data' => $this->getData(),
-            'columns' => $this->getColumns(),
-            'ajax' => $this->getAjax(),
-            'ajaxData' => [
-                'model' => $this->getModel(),
-                'columnSearch' => $this->getSerializedCallbacks(),
-            ],
-            'getRecordsUsing' => $this->getGetRecordsUsing(),
-        ]);
+        //        dd($this->collectPublicGetters(exclude: [
+        //            'getModel',
+        //            'getSerializedCallbacks',
+        //        ]));
+        return view('components.datatable', $this->collectPublicGetters(exclude: [
+            'getModel',
+            'getSerializedCallbacks',
+        ]));
     }
 
     public function toArray(): array

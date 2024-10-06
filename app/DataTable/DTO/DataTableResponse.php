@@ -6,6 +6,7 @@ namespace App\DataTable\DTO;
 
 use App\DataTable\Column;
 use Closure;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -46,12 +47,7 @@ class DataTableResponse implements Arrayable
         static::applySearch($query, $request);
         static::applyOrdering($query, $request);
 
-        // dd($query->toRawSql());
-
-        $paginator = $query->paginate(
-            perPage: $request->length,
-            page: $request->start / $request->length + 1
-        );
+        $paginator = static::paginate($query, $request);
 
         return new self(
             draw: $request->draw,
@@ -134,5 +130,22 @@ class DataTableResponse implements Arrayable
             ->toArray();
 
         return $orderableColumns;
+    }
+
+    /**
+     * @param  Builder<Model>  $query
+     * @return LengthAwarePaginator<Model>
+     */
+    protected static function paginate(Builder $query, DataTableRequest $request): LengthAwarePaginator
+    {
+        $length = $request->length;
+        $page = $request->start / $request->length + 1;
+
+        if ($length === -1) {
+            $length = $query->count();
+            $page = 1;
+        }
+
+        return $query->paginate(perPage: $length, page: $page);
     }
 }
