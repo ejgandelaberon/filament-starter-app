@@ -35,7 +35,7 @@
         getRecordsUsing: @js($getGetRecordsUsing()),
     })"
     wire:ignore
-    class="w-full h-full border-2 rounded-lg p-4"
+    class="max-w-7xl w-full h-full border-2 rounded-lg p-4"
 >
     <table x-ref="table"></table>
 </div>
