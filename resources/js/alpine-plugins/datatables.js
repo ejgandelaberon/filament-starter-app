@@ -1,7 +1,14 @@
 import DataTable from 'datatables.net-dt';
 
 export default (Alpine) => {
-    Alpine.data('datatables', ({livewireId, data = [], columns = [], ajax = null, getRecordsUsing = null}) => ({
+    Alpine.data('datatables', ({
+        livewireId,
+        data = [],
+        columns = [],
+        ajax = null,
+        ajaxData = {},
+        getRecordsUsing = null
+    }) => ({
         init() {
             let ajaxCallback = ajax;
 
@@ -23,9 +30,7 @@ export default (Alpine) => {
                 ],
                 ajax: {
                     url: ajaxCallback,
-                    data: {
-                        foo: 'bar',
-                    },
+                    data: ajaxData,
                     dataSrc: 'data',
                     method: 'POST',
                     headers: {

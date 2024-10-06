@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\DataTable\DTO;
 
 use App\DataTable\Column;
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
+use Laravel\SerializableClosure\SerializableClosure;
 
 /**
  * @implements Arrayable<string, mixed>
@@ -35,13 +38,10 @@ class DataTableResponse implements Arrayable
         ];
     }
 
-    /**
-     * @param  class-string<Model>  $model
-     */
-    public static function make(DataTableRequest $request, string $model): self
+    public static function make(DataTableRequest $request): self
     {
         /** @var Builder<Model> $query */
-        $query = $model::query();
+        $query = $request->model::query();
 
         static::applySearch($query, $request);
         static::applyOrdering($query, $request);
@@ -72,14 +72,34 @@ class DataTableResponse implements Arrayable
                     continue;
                 }
 
-                if ($column->getSearchCallback()) {
-                    $column->applySearchCallback($query, $request->search->value);
+                $columnSearchCallback = $request->columnSearch[$column->getData()] ?? null;
+
+                if ($columnSearchCallback !== null) {
+                    $callback = static::deserializeCallback($columnSearchCallback);
+                    $callback($query, $request->search->value);
 
                     continue;
                 }
 
                 $query->orWhereLike($column->getName(), "%{$request->search->value}%");
             }
+        }
+    }
+
+    /**
+     * @return Closure(Builder<Model>, ?string): Builder<Model>
+     */
+    protected static function deserializeCallback(string $callback): Closure
+    {
+        /** @var SerializableClosure $callback */
+        $callback = unserialize($callback);
+
+        try {
+            return $callback->getClosure();
+        } catch (PhpVersionNotSupportedException $e) {
+            report($e);
+
+            return fn (Builder $query, ?string $search): Builder => $query;
         }
     }
 

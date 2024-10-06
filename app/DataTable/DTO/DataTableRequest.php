@@ -8,30 +8,35 @@ use App\DataTable\Column;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class DataTableRequest
+readonly class DataTableRequest
 {
     /**
      * @param  Column[]  $columns
      * @param  DataTableOrder[]  $order
+     * @param  string[]  $columnSearch
      */
     public function __construct(
+        public string $model,
         public int $draw,
         public int $start,
         public int $length,
         public array $columns,
         public array $order,
         public DataTableSearch $search,
+        public array $columnSearch = [],
     ) {}
 
     public static function fromRequest(Request $request): self
     {
         return new self(
+            model: $request->string('model')->toString(),
             draw: $request->integer('draw'),
             start: $request->integer('start'),
             length: $request->integer('length'),
             columns: self::createColumns($request),
             order: self::createOrders($request),
             search: self::createDataTableSearch($request),
+            columnSearch: $request->input('columnSearch', []), // @phpstan-ignore-line
         );
     }
 

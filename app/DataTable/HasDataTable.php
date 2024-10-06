@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace App\DataTable;
 
+use Illuminate\Database\Eloquent\Model;
 use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
 use Livewire\Attributes\Computed;
 
 trait HasDataTable
 {
+    /**
+     * @return class-string<Model>
+     */
+    abstract protected function model(): string;
+
     /**
      * @throws PhpVersionNotSupportedException
      */
@@ -16,7 +22,7 @@ trait HasDataTable
     public function dataTable(): DataTable
     {
         return $this->configureDataTable(
-            DataTable::make()->livewire($this)
+            DataTable::make($this->model())->livewire($this)
         );
     }
 

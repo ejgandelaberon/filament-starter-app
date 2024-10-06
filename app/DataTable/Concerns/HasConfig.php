@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTable\Concerns;
 
 use App\DataTable\Column;
+use Illuminate\Support\Arr;
 
 trait HasConfig
 {
@@ -17,6 +18,11 @@ trait HasConfig
      * @var Column[]
      */
     protected array $columns = [];
+
+    /**
+     * @var string[]
+     */
+    protected array $serializedCallbacks = [];
 
     protected ?string $ajax = null;
 
@@ -46,6 +52,9 @@ trait HasConfig
     public function columns(array $columns): static
     {
         $this->columns = $columns;
+        $this->serializedCallbacks = Arr::mapWithKeys($columns, fn (Column $column): array => [
+            $column->getData() => $column->getSerializedSearchCallback(),
+        ]);
 
         return $this;
     }
@@ -80,5 +89,10 @@ trait HasConfig
     public function getAjax(): ?string
     {
         return $this->ajax;
+    }
+
+    public function getSerializedCallbacks(): array
+    {
+        return $this->serializedCallbacks;
     }
 }

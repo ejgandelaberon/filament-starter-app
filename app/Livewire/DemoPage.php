@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\DataTable\Column;
-use App\DataTable\ColumnSearchManager;
 use App\DataTable\DataTable;
 use App\DataTable\HasDataTable;
+use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
@@ -22,6 +22,11 @@ class DemoPage extends Component
     public function render(): Renderable
     {
         return view('livewire.demo-page');
+    }
+
+    protected function model(): string
+    {
+        return User::class;
     }
 
     /**
@@ -40,10 +45,9 @@ class DemoPage extends Component
                 Column::make('created_at'),
                 Column::make('updated_at'),
                 Column::make('profile_photo_url')
-                    //                    ->searchUsing(function (Builder $query, ?string $search) {
-                    //                        return $query->orWhereLike('profile_photo_path', "%$search%");
-                    //                    })
-                    ->searchable(query: 'profile_photo_path')
+                    ->searchUsing(function (Builder $query, ?string $search) {
+                        return $query->orWhereLike('profile_photo_path', "%$search%");
+                    })
                     ->orderable(false),
             ]);
     }

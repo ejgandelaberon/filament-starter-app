@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
+use Laravel\SerializableClosure\SerializableClosure;
 
 /**
  * @implements Arrayable<string, mixed>
@@ -27,6 +28,8 @@ class Column implements Arrayable
     protected DataTableSearch $search;
 
     protected string|array|Closure|null $render = null; // @phpstan-ignore-line
+
+    protected ?string $serializedSearchCallback = null;
 
     final private function __construct(protected string $data)
     {
@@ -47,6 +50,8 @@ class Column implements Arrayable
 
     /**
      * @param  array<string, mixed>  $column
+     *
+     * @throws PhpVersionNotSupportedException
      */
     public static function fromArray(array $column): static
     {
@@ -170,26 +175,13 @@ class Column implements Arrayable
      */
     public function searchUsing(Closure $callback): static
     {
-        ColumnSearchManager::register($this->name, $callback);
+        $this->serializedSearchCallback = serialize(new SerializableClosure($callback));
 
         return $this;
     }
 
-    /**
-     * @return Closure(Builder<Model>, ?string): Builder<Model>|null
-     */
-    public function getSearchCallback(): ?Closure
+    public function getSerializedSearchCallback(): ?string
     {
-        return ColumnSearchManager::retrieve($this->name);
-    }
-
-    /**
-     * @param  Builder<Model>  $query
-     */
-    public function applySearchCallback(Builder $query, ?string $value): void
-    {
-        $callback = $this->getSearchCallback();
-
-        $callback && $callback($query, $value);
+        return $this->serializedSearchCallback;
     }
 }
