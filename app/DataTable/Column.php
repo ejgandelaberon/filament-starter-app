@@ -47,7 +47,15 @@ class Column implements Arrayable
     }
 
     /**
-     * @param  array<string, mixed>  $column
+     * @param  array{
+     *     data: string,
+     *     title?: string,
+     *     name: string,
+     *     render: string|string[]|Closure|null,
+     *     searchable: bool,
+     *     orderable: bool,
+     *     search: array{ value: ?string, regex: bool, fixed?: array<array-key, mixed> }
+     * }  $column
      */
     public static function fromArray(array $column): static
     {
