@@ -22,7 +22,7 @@ trait CollectsPublicGetters
             ->filter(fn (ReflectionMethod $method) => str($method->getName())->startsWith('get'))
             ->reject(fn (ReflectionMethod $method) => in_array($method->getName(), $exclude))
             ->mapWithKeys(fn (ReflectionMethod $method) => [
-                $method->getName() => Closure::fromCallable([$this, $method->getName()]),
+                $method->getName() => Closure::fromCallable([$this, $method->getName()]), // @phpstan-ignore-line
             ])
             ->all();
     }

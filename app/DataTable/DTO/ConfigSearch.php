@@ -19,6 +19,9 @@ readonly class ConfigSearch implements Arrayable
         public ?string $searchPlaceholder = null,
     ) {}
 
+    /**
+     * @return array<string, bool|string|null>
+     */
     public function toArray(): array
     {
         return [

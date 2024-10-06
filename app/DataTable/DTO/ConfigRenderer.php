@@ -18,6 +18,9 @@ readonly class ConfigRenderer implements Arrayable
         public ?string $pagingContainer = null,
     ) {}
 
+    /**
+     * @return array<string, ?string>
+     */
     public function toArray(): array
     {
         return [

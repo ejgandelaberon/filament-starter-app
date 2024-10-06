@@ -11,6 +11,9 @@ use App\DataTable\Enums\PagingType;
 
 trait HasConfig
 {
+    /**
+     * @var array<string, mixed>
+     */
     protected array $ajaxData = [];
 
     protected bool $autoWidth = true;
@@ -127,6 +130,9 @@ trait HasConfig
         return array_map(fn (Column $column): array => $column->toArray(), $this->columns);
     }
 
+    /**
+     * @param  array<string, mixed>  $ajaxData
+     */
     public function ajaxData(array $ajaxData): static
     {
         $this->ajaxData = $ajaxData;
@@ -134,6 +140,9 @@ trait HasConfig
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getAjaxData(): array
     {
         return $this->ajaxData;
@@ -163,11 +172,17 @@ trait HasConfig
         return $this->caption;
     }
 
+    /**
+     * @return int[]|int|null
+     */
     public function getDeferLoading(): array|int|null
     {
         return $this->deferLoading;
     }
 
+    /**
+     * @param  int[]|int|null  $deferLoading
+     */
     public function deferLoading(array|int|null $deferLoading): static
     {
         $this->deferLoading = $deferLoading;
@@ -326,7 +341,7 @@ trait HasConfig
 
     public function pagingType(?PagingType $pagingType): static
     {
-        $this->pagingType = $pagingType->value;
+        $this->pagingType = $pagingType?->value;
 
         return $this;
     }
@@ -343,6 +358,9 @@ trait HasConfig
         return $this;
     }
 
+    /**
+     * @return array<string, ?string>|string|null
+     */
     public function getRenderer(): array|string|null
     {
         if ($this->renderer instanceof ConfigRenderer) {
@@ -419,6 +437,9 @@ trait HasConfig
         return $this;
     }
 
+    /**
+     * @return array<string, bool|string|null>|bool|null
+     */
     public function getSearch(): array|bool|null
     {
         if ($this->search instanceof ConfigSearch) {
@@ -435,13 +456,16 @@ trait HasConfig
         return $this;
     }
 
+    /**
+     * @return array<int, array<string, bool|string|null>>|null
+     */
     public function getSearchCols(): ?array
     {
         if (! $this->searchCols) {
             return null;
         }
 
-        return collect($this->searchCols)->toArray();
+        return array_map(fn (ConfigSearch $search): array => $search->toArray(), $this->searchCols);
     }
 
     /**

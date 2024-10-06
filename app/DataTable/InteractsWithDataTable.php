@@ -26,12 +26,12 @@ trait InteractsWithDataTable
         return $dataTable;
     }
 
-    public function fetch(array $data): array
+    public function fetch(array $data): array // @phpstan-ignore-line
     {
         $ajaxData = AjaxData::make($data['draw'])
             ->start($data['start'])
             ->length($data['length'])
-            ->columns($this->dataTable->getColumns(false))
+            ->columns($this->dataTable->getColumns(false)) // @phpstan-ignore-line
             ->order(array_map(fn (array $order) => AjaxOrder::fromArray($order), $data['order']))
             ->search(AjaxSearch::fromArray($data['search']));
 
