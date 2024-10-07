@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace App\DataTable\DTO;
 
 use App\DataTable\Column;
-use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
-use Laravel\SerializableClosure\SerializableClosure;
 
 /**
  * @implements Arrayable<string, mixed>
