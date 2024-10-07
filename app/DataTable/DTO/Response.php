@@ -76,23 +76,6 @@ class Response implements Arrayable
     }
 
     /**
-     * @return Closure(Builder<Model>, ?string): Builder<Model>
-     */
-    protected static function deserializeCallback(string $callback): Closure
-    {
-        /** @var SerializableClosure $callback */
-        $callback = unserialize($callback);
-
-        try {
-            return $callback->getClosure();
-        } catch (PhpVersionNotSupportedException $e) {
-            report($e);
-
-            return fn (Builder $query, ?string $search): Builder => $query;
-        }
-    }
-
-    /**
      * @param  Builder<Model>  $query
      */
     protected static function applyOrdering(Builder $query, AjaxData $request): void
