@@ -9,7 +9,7 @@ use Emsephron\TallDatatable\Columns\Column;
 use Emsephron\TallDatatable\DataTable;
 use Emsephron\TallDatatable\Enums\PagingType;
 use Emsephron\TallDatatable\HasTallDatatable;
-use Emsephron\TallDatatable\InteractsWithDataTable;
+use Emsephron\TallDatatable\InteractsWithTallDatatable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -19,7 +19,7 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class DemoPage extends Component implements HasTallDatatable
 {
-    use InteractsWithDataTable;
+    use InteractsWithTallDatatable;
 
     public function render(): Renderable
     {
