@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\DataTable\Column;
-use App\DataTable\DataTable;
-use App\DataTable\Enums\PagingType;
-use App\DataTable\InteractsWithDataTable;
 use App\Models\User;
+use Emsephron\TallDatatable\Column;
+use Emsephron\TallDatatable\DataTable;
+use Emsephron\TallDatatable\Enums\PagingType;
+use Emsephron\TallDatatable\InteractsWithDataTable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Layout;
