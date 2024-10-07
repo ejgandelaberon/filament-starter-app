@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Models\User;
-use Emsephron\TallDatatable\Column;
+use Emsephron\TallDatatable\Columns\Column;
 use Emsephron\TallDatatable\DataTable;
 use Emsephron\TallDatatable\Enums\PagingType;
 use Emsephron\TallDatatable\InteractsWithDataTable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -33,17 +34,50 @@ class DemoPage extends Component
             ->scrollY('600px')
             ->searchDelay(150)
             ->columns([
-                Column::make('name'),
-                Column::make('email'),
-                Column::make('email_verified_at'),
-                Column::make('created_at'),
-                Column::make('updated_at'),
                 Column::make('profile_photo_url')
-                    ->searchUsing(function (Builder $query, ?string $search) {
+                    ->title('Profile Photo')
+                    ->renderUsing(static function (User $user, string $profilePhotoUrl): string {
+                        return "
+                            <div class='grid place-items-center'>
+                                <img src='$profilePhotoUrl' class='w-8 h-8 rounded-full border border-sky-500' alt='Profile photo'>
+                            </div>
+                        ";
+                    })
+                    ->searchUsing(static function (Builder $query, ?string $search) {
                         return $query->orWhereLike('profile_photo_path', "%$search%");
                     })
                     ->orderable(false),
-                Column::make('id'),
+
+                Column::make('name')
+                    ->renderUsing(static function (User $user, string $name): string {
+                        return "<span class='text-sm whitespace-nowrap'>$name</span>";
+                    }),
+
+                Column::make('email')
+                    ->renderUsing(static function (User $user, string $email): string {
+                        return "
+                            <a href='#' class='text-sm text-sky-600 hover:text-white hover:bg-sky-500 transition-colors duration-300 px-1.5 py-0.5 rounded whitespace-nowrap cursor-pointer'>
+                                $email
+                            </a>
+                        ";
+                    }),
+
+                Column::make('email_verified_at')
+                    ->renderUsing(static function (User $user, ?Carbon $emailVerifiedAt): string {
+                        return "<span class='text-sm whitespace-nowrap'>{$emailVerifiedAt?->format('F j, Y')}</span>";
+                    }),
+
+                Column::make('created_at')
+                    ->renderUsing(static function (User $user, ?Carbon $createdAt): string {
+                        return "<span class='text-sm whitespace-nowrap'>{$createdAt?->format('F j, Y')}</span>";
+                    }),
+
+                Column::make('updated_at')
+                    ->renderUsing(static function (User $user, ?Carbon $updatedAt): string {
+                        return "<span class='text-sm whitespace-nowrap'>{$updatedAt?->format('F j, Y')}</span>";
+                    }),
+
+                Column::make('id')->title('ID'),
             ]);
     }
 
