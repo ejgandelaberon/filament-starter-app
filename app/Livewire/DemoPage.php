@@ -28,6 +28,7 @@ class DemoPage extends Component
     public function dataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
+            ->id('users-table')
             ->order([6, 'desc'])
             ->pagingType(PagingType::FULL)
             ->rowId('id')

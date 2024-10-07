@@ -1306,11 +1306,9 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/tall-datatable",
-                "reference": "f6e23891130991043831b6ae9216cc74dec2b08e"
+                "reference": "054e2b83cbe42d70603c7859eec61d72dc2af0bd"
             },
             "require": {
-                "illuminate/support": "^11.0",
-                "illuminate/view": "^11.0",
                 "livewire/livewire": "^3.0",
                 "php": "^8.3",
                 "spatie/laravel-package-tools": "^1.16"
