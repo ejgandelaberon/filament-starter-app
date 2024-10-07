@@ -81,26 +81,16 @@ class Response implements Arrayable
     protected static function applyOrdering(Builder $query, AjaxData $request): void
     {
         if ($request->order) {
-            $orderableColumns = static::orderableColumns($request);
+            /** @var string[] $orderableColumns */
+            $orderableColumns = collect($request->columns)
+                ->filter(fn (Column $column): bool => $column->isOrderable())
+                ->map(fn (Column $column): ?string => $column->getData())
+                ->all();
 
             foreach ($request->order as $order) {
                 $query->orderBy($orderableColumns[$order->column], $order->dir);
             }
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    protected static function orderableColumns(AjaxData $request): array
-    {
-        /** @var string[] $orderableColumns */
-        $orderableColumns = collect($request->columns)
-            ->filter(fn (Column $column): bool => $column->isOrderable())
-            ->map(fn (Column $column): ?string => $column->getData())
-            ->all();
-
-        return $orderableColumns;
     }
 
     /**
