@@ -45,7 +45,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "packages/emsephron/tall-datatable"
+            "url": "../packages/tall-datatable"
         }
     ],
     "scripts": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9323c9e16ea86bf4b5ff804ec8894da0",
+    "content-hash": "9ab51e3006f89288031b0b1f74a99ad6",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -1302,11 +1302,11 @@
         },
         {
             "name": "emsephron/tall-datatable",
-            "version": "dev-main",
+            "version": "dev-dev-main",
             "dist": {
                 "type": "path",
-                "url": "packages/emsephron/tall-datatable",
-                "reference": "2401bb618bd8a747def6dc1f415a64e609e395ae"
+                "url": "../packages/tall-datatable",
+                "reference": "f6e23891130991043831b6ae9216cc74dec2b08e"
             },
             "require": {
                 "illuminate/support": "^11.0",
@@ -1314,6 +1314,13 @@
                 "livewire/livewire": "^3.0",
                 "php": "^8.3",
                 "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.9",
+                "laravel/pint": "^1.18",
+                "orchestra/testbench": "^9.5",
+                "pestphp/pest": "^3.3",
+                "pestphp/pest-plugin-laravel": "^3.0"
             },
             "type": "library",
             "extra": {
@@ -1327,6 +1334,22 @@
                 "psr-4": {
                     "Emsephron\\TallDatatable\\": "src/"
                 }
+            },
+            "scripts": {
+                "pint": [
+                    "./vendor/bin/pint"
+                ],
+                "stan": [
+                    "./vendor/bin/phpstan analyse --memory-limit=2G --ansi --no-progress --no-interaction --configuration=phpstan.neon"
+                ],
+                "test": [
+                    "./vendor/bin/pest --parallel"
+                ],
+                "pr": [
+                    "@composer pint",
+                    "@composer stan",
+                    "@composer test"
+                ]
             },
             "license": [
                 "MIT"
