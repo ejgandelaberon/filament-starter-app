@@ -8,6 +8,7 @@ use App\Models\User;
 use Emsephron\TallDatatable\Columns\Column;
 use Emsephron\TallDatatable\DataTable;
 use Emsephron\TallDatatable\Enums\PagingType;
+use Emsephron\TallDatatable\HasTallDatatable;
 use Emsephron\TallDatatable\InteractsWithDataTable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +17,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-class DemoPage extends Component
+class DemoPage extends Component implements HasTallDatatable
 {
     use InteractsWithDataTable;
 
