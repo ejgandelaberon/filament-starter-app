@@ -1306,7 +1306,7 @@
             "dist": {
                 "type": "path",
                 "url": "../packages/tall-datatable",
-                "reference": "054e2b83cbe42d70603c7859eec61d72dc2af0bd"
+                "reference": "f09e3b01fbb8408145a8e56274e810c80d35461a"
             },
             "require": {
                 "livewire/livewire": "^3.0",

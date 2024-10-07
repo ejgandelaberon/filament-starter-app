@@ -29,7 +29,6 @@ class DemoPage extends Component implements HasTallDatatable
     public function dataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
-            ->id('users-table')
             ->order([6, 'desc'])
             ->pagingType(PagingType::FULL)
             ->rowId('id')
