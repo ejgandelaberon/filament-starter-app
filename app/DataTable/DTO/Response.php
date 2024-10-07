@@ -64,8 +64,7 @@ class Response implements Arrayable
                     continue;
                 }
 
-                if ($column->getSearchCallback() !== null) {
-                    $callback = $column->getSearchCallback();
+                if ($callback = $column->getSearchCallback()) {
                     $callback($query, $request->search->value);
 
                     continue;
