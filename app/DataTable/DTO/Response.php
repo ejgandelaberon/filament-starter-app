@@ -41,7 +41,7 @@ class Response implements Arrayable
     public static function make(AjaxData $data, Builder $query): self
     {
         static::applySearch($query, $data);
-        static::applyOrdering($query, $data);
+        static::applyOrder($query, $data);
 
         $paginator = static::paginate($query, $data);
 
@@ -78,7 +78,7 @@ class Response implements Arrayable
     /**
      * @param  Builder<Model>  $query
      */
-    protected static function applyOrdering(Builder $query, AjaxData $request): void
+    protected static function applyOrder(Builder $query, AjaxData $request): void
     {
         if ($request->order) {
             /** @var string[] $orderableColumns */
