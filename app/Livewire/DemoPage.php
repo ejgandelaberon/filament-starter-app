@@ -14,6 +14,7 @@ use Emsephron\TallDatatable\InteractsWithTallDatatable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -30,7 +31,9 @@ class DemoPage extends Component implements HasTallDatatable
     public function dataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
-            ->errorMode(ErrorMode::Throw)
+            ->errorMode(function (int $techNote, string $message): void {
+                Log::error('Tall Datatable Error', compact('techNote', 'message'));
+            })
             ->order([6, 'desc'])
             ->pagingType(PagingType::FULL)
             ->rowId('id')
