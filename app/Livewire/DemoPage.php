@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Models\User;
 use Emsephron\TallDatatable\Columns\Column;
 use Emsephron\TallDatatable\DataTable;
+use Emsephron\TallDatatable\Enums\ErrorMode;
 use Emsephron\TallDatatable\Enums\PagingType;
 use Emsephron\TallDatatable\HasTallDatatable;
 use Emsephron\TallDatatable\InteractsWithTallDatatable;
@@ -29,6 +30,7 @@ class DemoPage extends Component implements HasTallDatatable
     public function dataTable(DataTable $dataTable): DataTable
     {
         return $dataTable
+            ->errorMode(ErrorMode::Throw)
             ->order([6, 'desc'])
             ->pagingType(PagingType::FULL)
             ->rowId('id')
