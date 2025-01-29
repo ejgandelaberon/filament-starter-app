@@ -99,6 +99,7 @@ class AdminPanelProvider extends PanelProvider
                     ->group('System Management'),
             ])
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
-            ->globalSearchFieldKeyBindingSuffix();
+            ->globalSearchFieldKeyBindingSuffix()
+            ->viteTheme('resources/css/filament/admin/theme.css');
     }
 }
