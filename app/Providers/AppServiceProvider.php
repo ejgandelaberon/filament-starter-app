@@ -35,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
             return null;
         });
 
+        Gate::define('viewLogViewer', fn (User $user): bool => $user->isSuperAdmin());
+        Gate::define('viewPulse', fn (User $user): bool => $user->isSuperAdmin());
+
         Model::shouldBeStrict();
     }
 }
