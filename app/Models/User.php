@@ -92,4 +92,14 @@ class User extends Authenticatable implements FilamentUser
     {
         return LogOptions::defaults()->logOnly(['name', 'email']);
     }
+
+    public function canImpersonate(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    public function canBeImpersonate(): bool
+    {
+        return ! $this->isSuperAdmin();
+    }
 }

@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.10",
         "livewire/livewire": "^3.5.12",
         "opcodesio/log-viewer": "^3.14.0",
-        "spatie/laravel-activitylog": "^4.9.1"
+        "spatie/laravel-activitylog": "^4.9.1",
+        "stechstudio/filament-impersonate": "^3.15"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14.10",
