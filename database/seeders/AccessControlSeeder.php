@@ -51,6 +51,7 @@ class AccessControlSeeder extends Seeder
     public function createPermissions(): void
     {
         Artisan::call('shield:generate', [
+            '--panel' => 'admin',
             '--resource' => 'UserResource,RoleResource',
             '--ignore-existing-policies' => true,
         ]);
