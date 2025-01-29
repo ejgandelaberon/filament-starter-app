@@ -4,5 +4,5 @@
 
 .fi-sidebar-nav {
     border-right: calc(1px * 0.5) solid transparent;
-    border-image: linear-gradient(to top, transparent 5%, var(--color-cm-amber) 50%, transparent 95%) 1;
+    border-image: linear-gradient(transparent 5%, var(--color-cm-amber) 50%, transparent 95%) 1;
 }
