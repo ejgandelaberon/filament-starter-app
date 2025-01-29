@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Filament\Clusters\UserManagement;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\UserResourceForm;
 use App\Models\User;
@@ -21,11 +20,11 @@ use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
 class UserResource extends Resource implements HasShieldPermissions
 {
-    protected static ?string $cluster = UserManagement::class;
-
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?string $navigationGroup = 'User Management';
 
     protected static ?int $navigationSort = 0;
 
