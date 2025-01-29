@@ -110,7 +110,9 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->nullable(),
             ])
             ->actions([
-                Impersonate::make()->visible(fn (): bool => (bool) auth()->user()?->isSuperAdmin()),
+                Impersonate::make()
+                    ->visible(fn (): bool => (bool) auth()->user()?->isSuperAdmin())
+                    ->tooltip('Impersonate User'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->color(fn ($record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system ? 'gray' : 'danger')
