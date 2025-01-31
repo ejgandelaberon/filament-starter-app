@@ -17,6 +17,8 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -38,6 +40,13 @@ class AdminPanelProvider extends PanelProvider
             'success' => Color::Green,
             'warning' => Color::Amber,
         ]);
+
+        if (! $this->app->isProduction()) {
+            FilamentView::registerRenderHook(
+                PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+                fn () => view('components.app-environment'),
+            );
+        }
     }
 
     /**

@@ -6,5 +6,6 @@ export default {
         './app/Filament/Clusters/ProfileSettings/**/*.php',
         './resources/views/filament/clusters/profile-settings/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
+        './resources/views/**/*.blade.php',
     ],
 }
