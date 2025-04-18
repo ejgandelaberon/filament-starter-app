@@ -44,7 +44,7 @@ trait InteractsWithTwoFactorAuthentication
     public function mountHasTwoFactorAuthentication(): void
     {
         if (Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm') &&
-            empty(Auth::user()?->two_factor_confirmed_at)) {
+            empty(Auth::user()->two_factor_confirmed_at)) {
             $this->disableTwoFactorAuthentication();
         }
     }
@@ -222,7 +222,7 @@ trait InteractsWithTwoFactorAuthentication
     #[Computed]
     public function enabled(): bool
     {
-        return ! empty(Auth::user()?->two_factor_secret);
+        return ! empty(Auth::user()->two_factor_secret);
     }
 
     /**

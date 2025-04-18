@@ -90,7 +90,7 @@ class ActivityResource extends Resource implements HasShieldPermissions
 
                 Tables\Columns\TextColumn::make('causer.name')
                     ->toggleable(false)
-                    ->getStateUsing(static fn (Activity $activity): string => $activity->causer?->name ?? 'System'),
+                    ->getStateUsing(static fn (Activity $activity): string => $activity->causer->name ?? 'System'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')

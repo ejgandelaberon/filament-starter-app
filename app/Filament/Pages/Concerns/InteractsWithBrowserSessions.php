@@ -76,7 +76,7 @@ trait InteractsWithBrowserSessions
                                 ->required()
                                 ->markAsRequired(false)
                                 ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail) {
-                                    if (! Hash::check($value, Auth::user()?->password ?? '')) {
+                                    if (! Hash::check($value, Auth::user()->password ?? '')) {
                                         $fail(__('This password does not match our records.'));
                                     }
                                 })

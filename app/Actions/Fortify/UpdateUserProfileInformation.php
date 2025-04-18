@@ -19,7 +19,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      * @param array{
      *     name: string,
      *     email: string,
-     *     photo: UploadedFile|null,
+     *     photo?: UploadedFile|null,
      * } $input
      */
     public function update(User $user, array $input): void
@@ -30,7 +30,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
 
-        if (isset($input['photo']) && $input['photo'] instanceof UploadedFile) {
+        if (! empty($input['photo'])) {
             $user->updateProfilePhoto($input['photo']);
         }
 
@@ -50,7 +50,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      * @param array{
      *     name: string,
      *     email: string,
-     *     photo: UploadedFile|null,
+     *     photo?: UploadedFile|null,
      * } $input
      */
     protected function updateVerifiedUser(User $user, array $input): void
