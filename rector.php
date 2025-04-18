@@ -3,8 +3,12 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use RectorLaravel\Set\LaravelLevelSetList;
 
 return RectorConfig::configure()
+    ->withSets([
+        LaravelLevelSetList::UP_TO_LARAVEL_120,
+    ])
     ->withPaths([
         __DIR__.'/app',
         __DIR__.'/bootstrap',

@@ -69,9 +69,13 @@
             "./vendor/bin/phpstan analyse --memory-limit=2G --ansi --no-progress --no-interaction --configuration=phpstan.neon"
         ],
         "test": [
-            "./vendor/bin/pest --parallel"
+            "./vendor/bin/pest --parallel --bail"
+        ],
+        "rector": [
+            "./vendor/bin/rector"
         ],
         "pr": [
+            "@composer rector",
             "@composer pint",
             "@composer stan",
             "@composer test"
