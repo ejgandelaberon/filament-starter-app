@@ -130,7 +130,7 @@ trait InteractsWithTwoFactorAuthentication
                         ->visible(fn () => ! $this->enabled())
                         ->modalHeading('Enable Two-Factor Authentication')
                         ->failureNotificationTitle('Failed to Enable Two-Factor Authentication')
-                        ->action(function (Action $action, EnableTwoFactorAuthentication $enable) {
+                        ->action(function (Action $action, EnableTwoFactorAuthentication $enable): void {
                             try {
                                 session(['auth.password_confirmed_at' => time()]);
 
@@ -179,7 +179,7 @@ trait InteractsWithTwoFactorAuthentication
                         ->color('gray')
                         ->modalHeading('Regenerate Recovery Codes')
                         ->failureNotificationTitle('Failed to Regenerate Recovery Codes')
-                        ->action(function (Action $action, GenerateNewRecoveryCodes $generate) {
+                        ->action(function (Action $action, GenerateNewRecoveryCodes $generate): void {
                             try {
                                 $generate(Auth::user());
                             } catch (Throwable $exception) {
@@ -196,7 +196,7 @@ trait InteractsWithTwoFactorAuthentication
                         ->color('danger')
                         ->modalHeading('Disable Two-Factor Authentication')
                         ->failureNotificationTitle('Failed to Disable Two-Factor Authentication')
-                        ->action(function (Action $action) {
+                        ->action(function (Action $action): void {
                             try {
                                 $this->disableTwoFactorAuthentication();
                             } catch (Throwable $exception) {
@@ -242,7 +242,7 @@ trait InteractsWithTwoFactorAuthentication
                         ->revealable()
                         ->required()
                         ->markAsRequired(false)
-                        ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                        ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail): void {
                             if (! app(ConfirmPassword::class)(app(StatefulGuard::class), Auth::user(), $value)) {
                                 $fail('The password you entered is incorrect.');
                             }

@@ -75,7 +75,7 @@ trait InteractsWithBrowserSessions
                                 ->revealable()
                                 ->required()
                                 ->markAsRequired(false)
-                                ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                                ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail): void {
                                     if (! Hash::check($value, Auth::user()->password ?? '')) {
                                         $fail(__('This password does not match our records.'));
                                     }
@@ -85,7 +85,7 @@ trait InteractsWithBrowserSessions
                                 ])
                                 ->label(''),
                         ])
-                        ->action(function (Action $action, StatefulGuard $guard, array $data) {
+                        ->action(function (Action $action, StatefulGuard $guard, array $data): void {
                             try {
                                 $this->logoutOtherBrowserSessions($guard, reset($data));
 
