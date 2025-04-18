@@ -4,16 +4,25 @@ declare(strict_types=1);
 
 namespace App\Filament;
 
+use Filament\Actions;
 use Filament\Tables;
 
 class FilamentConfigurations
 {
     public function boot(): void
     {
-        $this->tableConfigurations();
+        $this->configurePageActions();
+        $this->configureTable();
     }
 
-    protected function tableConfigurations(): void
+    protected function configurePageActions(): void
+    {
+        Actions\CreateAction::configureUsing(function (Actions\CreateAction $action): void {
+            $action->label('Create')->icon('heroicon-o-plus');
+        }, isImportant: true);
+    }
+
+    protected function configureTable(): void
     {
         Tables\Actions\Action::configureUsing(function (Tables\Actions\Action $action): void {
             $action->label('');
@@ -39,6 +48,7 @@ class FilamentConfigurations
 
         Tables\Columns\Column::configureUsing(function (Tables\Columns\Column $column): void {
             $column
+                ->label(fn (?string $state, Tables\Columns\Column $column): string => str($column->getName())->headline()->toString())
                 ->toggleable()
                 ->searchable();
         });
