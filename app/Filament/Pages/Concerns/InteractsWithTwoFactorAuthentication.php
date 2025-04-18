@@ -15,7 +15,6 @@ use Filament\Notifications\Notification;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Auth\StatefulGuard;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Actions\ConfirmPassword;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
@@ -231,7 +230,7 @@ trait InteractsWithTwoFactorAuthentication
      */
     protected function withPasswordConfirmation(array $actions): array
     {
-        return Arr::map($actions, function (Action $action) {
+        return array_map(function (Action $action): Action {
             return $action
                 ->requiresConfirmation()
                 ->modal(fn () => ! $this->passwordIsConfirmed())
@@ -242,7 +241,7 @@ trait InteractsWithTwoFactorAuthentication
                         ->revealable()
                         ->required()
                         ->markAsRequired(false)
-                        ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail): void {
+                        ->rule(fn (): Closure => function (string $attribute, string $value, Closure $fail): void {
                             if (! app(ConfirmPassword::class)(app(StatefulGuard::class), Auth::user(), $value)) {
                                 $fail('The password you entered is incorrect.');
                             }
@@ -252,6 +251,6 @@ trait InteractsWithTwoFactorAuthentication
                         ])
                         ->label(''),
                 ]);
-        });
+        }, $actions);
     }
 }

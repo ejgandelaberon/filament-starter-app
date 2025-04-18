@@ -75,7 +75,7 @@ trait InteractsWithBrowserSessions
                                 ->revealable()
                                 ->required()
                                 ->markAsRequired(false)
-                                ->rule(fn (): Closure => function (string $attribute, $value, Closure $fail): void {
+                                ->rule(fn (): Closure => function (string $attribute, string $value, Closure $fail): void {
                                     if (! Hash::check($value, Auth::user()->password ?? '')) {
                                         $fail(__('This password does not match our records.'));
                                     }
@@ -86,8 +86,10 @@ trait InteractsWithBrowserSessions
                                 ->label(''),
                         ])
                         ->action(function (Action $action, StatefulGuard $guard, array $data): void {
+                            $password = reset($data);
+
                             try {
-                                $this->logoutOtherBrowserSessions($guard, reset($data));
+                                $this->logoutOtherBrowserSessions($guard, is_string($password) ? $password : '');
 
                                 $action->success();
                             } catch (Throwable $exception) {
@@ -107,10 +109,6 @@ trait InteractsWithBrowserSessions
     #[Computed]
     public function sessions(): Collection
     {
-        if (Config::string('session.driver') !== 'database') {
-            return collect();
-        }
-
         /** @var Collection<int, object{ id: string, user_id: int, ip_address: string, user_agent: string, payload: string, last_activity: int }> $sessions */
         $sessions = DB::connection(Config::string('session.connection'))
             ->table(Config::string('session.table', 'sessions'))

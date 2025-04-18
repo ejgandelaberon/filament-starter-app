@@ -115,8 +115,8 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->tooltip('Impersonate User'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->color(fn ($record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system ? 'gray' : 'danger')
-                    ->disabled(fn ($record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system),
+                    ->color(fn (User $record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system ? 'gray' : 'danger')
+                    ->disabled(fn (User $record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
