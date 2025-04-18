@@ -8,6 +8,7 @@
         "php": "^8.3",
         "bezhansalleh/filament-shield": "^3.3.5",
         "codeat3/blade-fluentui-system-icons": "^1.34",
+        "driftingly/rector-laravel": "^2.0",
         "filament/filament": "^3.3.10",
         "laravel/framework": "^12.9.2",
         "laravel/jetstream": "^5.3.6",
