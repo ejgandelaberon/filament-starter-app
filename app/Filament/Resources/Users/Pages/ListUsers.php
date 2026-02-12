@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\UserResource\Pages;
+namespace App\Filament\Resources\Users\Pages;
 
 use App\Enums\SystemRoleEnum;
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\Users\UserResource;
 use App\Models\User;
 use Exception;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Colors\Color;
@@ -23,8 +24,8 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
-            Actions\Action::make('create_from_factory')
+            CreateAction::make(),
+            Action::make('create_from_factory')
                 ->label('Create from Factory')
                 ->visible(fn (): bool => App::isLocal())
                 ->color(Color::Fuchsia)
@@ -39,7 +40,7 @@ class ListUsers extends ListRecords
                         ->title('Failed to create user from factory')
                         ->body('The user could not be created from the factory.');
                 })
-                ->action(function (Actions\Action $action): void {
+                ->action(function (Action $action): void {
                     try {
                         /** @var User $user */
                         $user = User::factory()->create();

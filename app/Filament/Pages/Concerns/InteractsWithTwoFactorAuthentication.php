@@ -6,11 +6,7 @@ namespace App\Filament\Pages\Concerns;
 
 use Closure;
 use Exception;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\View;
 use Filament\Notifications\Notification;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
@@ -63,7 +59,7 @@ trait InteractsWithTwoFactorAuthentication
             $this->callHook('afterValidate');
 
             /** @var array{ code: ?string } $data */
-            $data = $this->mutateFormDataBeforeSave($data);
+            $data = $this->mutateFormDataBeforeSave($data); // @phpstan-ignore-line
 
             $this->callHook('beforeSave');
 
@@ -104,18 +100,18 @@ trait InteractsWithTwoFactorAuthentication
     }
 
     /**
-     * @return Component[]
+     * @return \Filament\Schemas\Components\Component[]
      */
     public function getTwoFactorAuthenticationFormFields(): array
     {
         return [
-            Section::make('Two-Factor Authentication')
+            \Filament\Schemas\Components\Section::make('Two-Factor Authentication')
                 ->aside()
                 ->description('Add additional security to your account using two factor authentication.')
                 ->schema([
-                    View::make('filament.two-factor-authentication.label'),
+                    \Filament\Schemas\Components\View::make('filament.two-factor-authentication.label'),
 
-                    View::make('filament.two-factor-authentication.qr-code'),
+                    \Filament\Schemas\Components\View::make('filament.two-factor-authentication.qr-code'),
 
                     TextInput::make('code')
                         ->visible(fn () => $this->showingQrCode)
@@ -124,12 +120,12 @@ trait InteractsWithTwoFactorAuthentication
                         ->placeholder('Enter the code from your authenticator'),
                 ])
                 ->footerActions($this->withPasswordConfirmation([
-                    Action::make('enableTwoFactorAuthentication')
+                    \Filament\Actions\Action::make('enableTwoFactorAuthentication')
                         ->label('Enable')
                         ->visible(fn () => ! $this->enabled())
                         ->modalHeading('Enable Two-Factor Authentication')
                         ->failureNotificationTitle('Failed to Enable Two-Factor Authentication')
-                        ->action(function (Action $action, EnableTwoFactorAuthentication $enable): void {
+                        ->action(function (\Filament\Actions\Action $action, EnableTwoFactorAuthentication $enable): void {
                             try {
                                 session(['auth.password_confirmed_at' => time()]);
 
@@ -150,21 +146,21 @@ trait InteractsWithTwoFactorAuthentication
                             }
                         }),
 
-                    Action::make('confirmCode')
+                    \Filament\Actions\Action::make('confirmCode')
                         ->visible(fn () => $this->showingConfirmation)
                         ->label('Confirm')
                         ->color('primary')
                         ->modalHeading('Confirm Two-Factor Authentication')
                         ->submit('confirm'),
 
-                    Action::make('cancel2faConfirmation')
+                    \Filament\Actions\Action::make('cancel2faConfirmation')
                         ->visible(fn () => $this->showingConfirmation)
                         ->label('Cancel')
                         ->color('gray')
                         ->modalHeading('Cancel Two-Factor Authentication Confirmation')
                         ->action(fn () => $this->disableTwoFactorAuthentication()),
 
-                    Action::make('showRecoveryCodes')
+                    \Filament\Actions\Action::make('showRecoveryCodes')
                         ->visible(fn () => $this->enabled() && ! $this->showingRecoveryCodes && ! $this->showingConfirmation)
                         ->label('Show Recovery Codes')
                         ->color('gray')
@@ -172,13 +168,13 @@ trait InteractsWithTwoFactorAuthentication
                         ->failureNotificationTitle('Failed to Show Recovery Codes')
                         ->action(fn () => $this->showingRecoveryCodes = true),
 
-                    Action::make('regenerateRecoveryCodes')
+                    \Filament\Actions\Action::make('regenerateRecoveryCodes')
                         ->visible(fn () => $this->showingRecoveryCodes)
                         ->label('Regenerate Recovery Codes')
                         ->color('gray')
                         ->modalHeading('Regenerate Recovery Codes')
                         ->failureNotificationTitle('Failed to Regenerate Recovery Codes')
-                        ->action(function (Action $action, GenerateNewRecoveryCodes $generate): void {
+                        ->action(function (\Filament\Actions\Action $action, GenerateNewRecoveryCodes $generate): void {
                             try {
                                 $generate(Auth::user());
                             } catch (Throwable $exception) {
@@ -189,13 +185,13 @@ trait InteractsWithTwoFactorAuthentication
                             }
                         }),
 
-                    Action::make('disableTwoFactorAuthentication')
+                    \Filament\Actions\Action::make('disableTwoFactorAuthentication')
                         ->visible(fn () => $this->enabled() && ! $this->showingConfirmation)
                         ->label('Disable')
                         ->color('danger')
                         ->modalHeading('Disable Two-Factor Authentication')
                         ->failureNotificationTitle('Failed to Disable Two-Factor Authentication')
-                        ->action(function (Action $action): void {
+                        ->action(function (\Filament\Actions\Action $action): void {
                             try {
                                 $this->disableTwoFactorAuthentication();
                             } catch (Throwable $exception) {
@@ -225,17 +221,17 @@ trait InteractsWithTwoFactorAuthentication
     }
 
     /**
-     * @param  Action[]  $actions
-     * @return Action[]
+     * @param  \Filament\Actions\Action[]  $actions
+     * @return \Filament\Actions\Action[]
      */
     protected function withPasswordConfirmation(array $actions): array
     {
-        return array_map(function (Action $action): Action {
+        return array_map(function (\Filament\Actions\Action $action): \Filament\Actions\Action {
             return $action
                 ->requiresConfirmation()
                 ->modal(fn () => ! $this->passwordIsConfirmed())
                 ->modalDescription('For your security, please confirm your password to continue.')
-                ->form([
+                ->schema([
                     TextInput::make('password')
                         ->password()
                         ->revealable()

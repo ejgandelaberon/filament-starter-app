@@ -2,29 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Users;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\UserResourceForm;
+use App\Filament\Resources\Users\Pages\CreateUser;
+use App\Filament\Resources\Users\Pages\EditUser;
+use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Exception;
-use Filament\Forms\Form;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use STS\FilamentImpersonate\Tables\Actions\Impersonate;
+use STS\FilamentImpersonate\Actions\Impersonate;
 
 class UserResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'User Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'User Management';
 
     protected static ?int $navigationSort = 0;
 
@@ -47,9 +54,9 @@ class UserResource extends Resource implements HasShieldPermissions
         return strval(static::getEloquentQuery()->count());
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema(UserResourceForm::make());
+        return $schema->components(UserResourceForm::make());
     }
 
     /**
@@ -59,27 +66,27 @@ class UserResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->toggleable(false)
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->toggleable(false)
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('roles.name')
+                TextColumn::make('roles.name')
                     ->listWithLineBreaks()
                     ->badge()
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('email_verified_at')
+                TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
 
-                Tables\Columns\IconColumn::make('system')
+                IconColumn::make('system')
                     ->boolean()
                     ->trueColor('info')
                     ->falseColor('warning')
@@ -87,49 +94,47 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->label('System')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('role')
+                SelectFilter::make('role')
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->preload()
                     ->searchable(),
 
-                Tables\Filters\TernaryFilter::make('email_verified_at')
+                TernaryFilter::make('email_verified_at')
                     ->label('Email Verified')
                     ->native(false)
                     ->nullable(),
             ])
-            ->actions([
+            ->recordActions([
                 Impersonate::make()
                     ->visible(fn (): bool => (bool) auth()->user()?->isSuperAdmin())
                     ->tooltip('Impersonate User'),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                EditAction::make(),
+                DeleteAction::make()
                     ->color(fn (User $record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system ? 'gray' : 'danger')
                     ->disabled(fn (User $record) => $record->isSuperAdmin() || $record->is(auth()->user()) || $record->system),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->using(static function (Collection $records): void {
-                            /** @var Collection<int, User> $users */
-                            $users = $records;
+            ->groupedBulkActions([
+                DeleteBulkAction::make()
+                    ->using(static function (Collection $records): void {
+                        /** @var Collection<int, User> $users */
+                        $users = $records;
 
-                            $users
-                                ->reject(fn (User $record): bool => $record->isSuperAdmin() || $record->is(auth()->user()))
-                                ->each(fn (User $record): ?bool => $record->delete());
-                        }),
-                ]),
+                        $users
+                            ->reject(fn (User $record): bool => $record->isSuperAdmin() || $record->is(auth()->user()))
+                            ->each(fn (User $record): ?bool => $record->delete());
+                    }),
             ]);
     }
 
@@ -143,9 +148,9 @@ class UserResource extends Resource implements HasShieldPermissions
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 
@@ -162,7 +167,7 @@ class UserResource extends Resource implements HasShieldPermissions
         return [
             'Email' => $record->email,
             'Verified' => filled($record->email_verified_at) ? 'Yes' : 'No',
-            'Roles' => $record->roles->pluck('name')->join(', '),
+            'Roles' => $record->roles->pluck('name')->implode(', '),
         ];
     }
 

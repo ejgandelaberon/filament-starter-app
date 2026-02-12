@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\ActivityResource\Pages;
+namespace App\Filament\Resources\Activities\Pages;
 
-use App\Filament\Resources\ActivityResource;
+use App\Filament\Resources\Activities\ActivityResource;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageActivities extends ManageRecords

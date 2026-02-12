@@ -7,13 +7,13 @@ namespace App\Filament\Pages;
 use App\Filament\Pages\Concerns\InteractsWithBrowserSessions;
 use App\Filament\Pages\Concerns\InteractsWithTwoFactorAuthentication;
 use Exception;
+use Filament\Actions\Action;
+use Filament\Auth\Pages\EditProfile;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Js;
-use JsonException;
 use Laravel\Jetstream\ConfirmsPasswords;
 
 /**
@@ -32,7 +32,8 @@ class ProfileInformation extends EditProfile
     }
 
     /**
-     * @throws JsonException
+     * @return array<string, Schema>
+     *
      * @throws Exception
      */
     protected function getForms(): array
@@ -40,15 +41,15 @@ class ProfileInformation extends EditProfile
         return [
             'form' => $this->getProfileForm(),
             'twoFactorAuthForm' => $this->form(
-                $this->makeForm()
-                    ->schema($this->getTwoFactorAuthenticationFormFields())
+                $this->makeSchema()
+                    ->components($this->getTwoFactorAuthenticationFormFields())
                     ->operation('edit')
                     ->model($this->getUser())
                     ->inlineLabel(! static::isSimple()),
             ),
             'browserSessionsForm' => $this->form(
-                $this->makeForm()
-                    ->schema($this->getBrowserSessionsFormFields())
+                $this->makeSchema()
+                    ->components($this->getBrowserSessionsFormFields())
                     ->operation('edit')
                     ->model($this->getUser())
                     ->inlineLabel(! static::isSimple()),
@@ -64,11 +65,11 @@ class ProfileInformation extends EditProfile
     /**
      * @throws Exception
      */
-    protected function getProfileForm(): Form
+    protected function getProfileForm(): Schema
     {
         return $this->form(
-            $this->makeForm()
-                ->schema([
+            $this->makeSchema()
+                ->components([
                     Section::make('Profile Information')
                         ->aside()
                         ->description('Update your profile information and change your password.')

@@ -21,3 +21,13 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+.claude/
+.cursor/
+.junie/
+.ai/mcp
+.github/copilot-instructions.md
+boost.json
+CLAUDE.md
+.mcp.json
+public/fonts
+AGENTS.md

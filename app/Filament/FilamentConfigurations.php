@@ -4,8 +4,22 @@ declare(strict_types=1);
 
 namespace App\Filament;
 
-use Filament\Actions;
-use Filament\Tables;
+use Filament\Actions\Action;
+use Filament\Actions\AssociateAction;
+use Filament\Actions\AttachAction;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DissociateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\ImportAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\SelectAction;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\Column;
 
 class FilamentConfigurations
 {
@@ -17,38 +31,38 @@ class FilamentConfigurations
 
     protected function configurePageActions(): void
     {
-        Actions\CreateAction::configureUsing(function (Actions\CreateAction $action): void {
+        CreateAction::configureUsing(function (CreateAction $action): void {
             $action->label('Create')->icon('heroicon-o-plus');
         }, isImportant: true);
     }
 
     protected function configureTable(): void
     {
-        Tables\Actions\Action::configureUsing(function (Tables\Actions\Action $action): void {
+        Action::configureUsing(function (Action $action): void {
             $action->label('');
 
             match ($action::class) {
-                Tables\Actions\AssociateAction::class => $action->tooltip('Associate'),
-                Tables\Actions\AttachAction::class => $action->tooltip('Attach'),
-                Tables\Actions\CreateAction::class => $action->tooltip('Create'),
-                Tables\Actions\DeleteAction::class => $action->tooltip('Delete'),
-                Tables\Actions\DetachAction::class => $action->tooltip('Detach'),
-                Tables\Actions\DissociateAction::class => $action->tooltip('Dissociate'),
-                Tables\Actions\EditAction::class => $action->tooltip('Edit'),
-                Tables\Actions\ExportAction::class => $action->tooltip('Export'),
-                Tables\Actions\ForceDeleteAction::class => $action->tooltip('Force Delete'),
-                Tables\Actions\ImportAction::class => $action->tooltip('Import'),
-                Tables\Actions\ReplicateAction::class => $action->tooltip('Replicate'),
-                Tables\Actions\RestoreAction::class => $action->tooltip('Restore'),
-                Tables\Actions\SelectAction::class => $action->tooltip('Select'),
-                Tables\Actions\ViewAction::class => $action->tooltip('View'),
+                AssociateAction::class => $action->tooltip('Associate'),
+                AttachAction::class => $action->tooltip('Attach'),
+                CreateAction::class => $action->tooltip('Create'),
+                DeleteAction::class => $action->tooltip('Delete'),
+                DetachAction::class => $action->tooltip('Detach'),
+                DissociateAction::class => $action->tooltip('Dissociate'),
+                EditAction::class => $action->tooltip('Edit'),
+                ExportAction::class => $action->tooltip('Export'),
+                ForceDeleteAction::class => $action->tooltip('Force Delete'),
+                ImportAction::class => $action->tooltip('Import'),
+                ReplicateAction::class => $action->tooltip('Replicate'),
+                RestoreAction::class => $action->tooltip('Restore'),
+                SelectAction::class => $action->tooltip('Select'),
+                ViewAction::class => $action->tooltip('View'),
                 default => $action->tooltip(null),
             };
         }, isImportant: true);
 
-        Tables\Columns\Column::configureUsing(function (Tables\Columns\Column $column): void {
+        Column::configureUsing(function (Column $column): void {
             $column
-                ->label(fn (?string $state, Tables\Columns\Column $column): string => str($column->getName())->headline()->toString())
+                ->label(fn (?string $state, Column $column): string => str($column->getName())->headline()->toString())
                 ->toggleable()
                 ->searchable();
         });

@@ -2,29 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Activities;
 
-use App\Filament\Resources\ActivityResource\Pages;
+use App\Filament\Resources\Activities\Pages\ManageActivities;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Filament\Infolists\Components\Grid;
+use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\KeyValueEntry;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
+use UnitEnum;
 
 class ActivityResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Activity::class;
 
-    protected static ?string $navigationIcon = 'fluentui-history-48-o';
+    protected static string|BackedEnum|null $navigationIcon = 'fluentui-history-48-o';
 
-    protected static ?string $navigationGroup = 'System Management';
+    protected static string|UnitEnum|null $navigationGroup = 'System Management';
 
     protected static ?int $navigationSort = 2;
 
@@ -35,10 +38,10 @@ class ActivityResource extends Resource implements HasShieldPermissions
         return auth()->user()?->isSuperAdmin() ?? false;
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make([
                     TextEntry::make('event')
                         ->inlineLabel()
@@ -79,16 +82,16 @@ class ActivityResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('event')
+                TextColumn::make('event')
                     ->toggleable(false)
                     ->badge(),
 
-                Tables\Columns\TextColumn::make('subject_type')
+                TextColumn::make('subject_type')
                     ->toggleable(false)
                     ->label('Subject')
                     ->formatStateUsing(static fn (Activity $activity): string => Str::afterLast($activity->subject_type ?? '', '\\')),
 
-                Tables\Columns\TextColumn::make('causer.name')
+                TextColumn::make('causer.name')
                     ->toggleable(false)
                     ->getStateUsing(static function (Activity $activity): string {
                         $name = $activity->causer?->getAttribute('name');
@@ -96,16 +99,16 @@ class ActivityResource extends Resource implements HasShieldPermissions
                         return is_string($name) ? $name : 'System';
                     }),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Created At')
                     ->date('Y-m-d H:i:s'),
 
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->date('Y-m-d H:i:s'),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make('view')
+            ->recordActions([
+                ViewAction::make('view')
                     ->label('')
                     ->tooltip('View Changes')
                     ->icon('heroicon-o-eye'),
@@ -118,7 +121,7 @@ class ActivityResource extends Resource implements HasShieldPermissions
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageActivities::route('/'),
+            'index' => ManageActivities::route('/'),
         ];
     }
 

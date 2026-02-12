@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\UserResource;
+namespace App\Filament\Resources\Users;
 
 use App\Models\User;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
 class UserResourceForm
 {
     /**
-     * @return Component[]
+     * @return \Filament\Schemas\Components\Component[]
      */
     public static function make(): array
     {

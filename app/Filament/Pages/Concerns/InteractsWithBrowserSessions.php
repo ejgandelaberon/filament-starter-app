@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Pages\Concerns;
 
 use Closure;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\View;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Support\Carbon;
@@ -48,28 +44,28 @@ trait InteractsWithBrowserSessions
     }
 
     /**
-     * @return Component[]
+     * @return \Filament\Schemas\Components\Component[]
      */
     public function getBrowserSessionsFormFields(): array
     {
         return [
-            Section::make('Browser Sessions')
+            \Filament\Schemas\Components\Section::make('Browser Sessions')
                 ->aside()
                 ->description('Manage and log out your active sessions on other browsers and devices.')
                 ->schema([
-                    View::make('filament.browser-sessions.label'),
+                    \Filament\Schemas\Components\View::make('filament.browser-sessions.label'),
 
-                    View::make('filament.browser-sessions.sessions'),
+                    \Filament\Schemas\Components\View::make('filament.browser-sessions.sessions'),
                 ])
                 ->footerActions([
-                    Action::make('logoutSessions')
+                    \Filament\Actions\Action::make('logoutSessions')
                         ->label('Log Out Other Browser Sessions')
                         ->requiresConfirmation()
                         ->modalHeading('Log Out Other Browser Sessions')
                         ->modalDescription('Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.')
                         ->successNotificationTitle('Your other browser sessions have been logged out.')
                         ->failureNotificationTitle('Something went wrong while logging out of your other browser sessions.')
-                        ->form([
+                        ->schema([
                             TextInput::make('password')
                                 ->password()
                                 ->revealable()
@@ -85,7 +81,7 @@ trait InteractsWithBrowserSessions
                                 ])
                                 ->label(''),
                         ])
-                        ->action(function (Action $action, StatefulGuard $guard, array $data): void {
+                        ->action(function (\Filament\Actions\Action $action, StatefulGuard $guard, array $data): void {
                             $password = reset($data);
 
                             try {

@@ -6,11 +6,11 @@ namespace App\Filament;
 
 use App\Models\User;
 use Filament\Actions\Action;
+use Filament\Auth\Http\Responses\LoginResponse;
+use Filament\Auth\Pages\Login;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Filament\Pages\Auth\Login;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 
 class LoginPage extends Login
 {
@@ -21,7 +21,7 @@ class LoginPage extends Login
 
             Action::make('dev_login')
                 ->visible(fn (): bool => app()->isLocal())
-                ->form([
+                ->schema([
                     Select::make('user_id')
                         ->label('User')
                         ->required()
@@ -34,12 +34,12 @@ class LoginPage extends Login
                                 ->mapWithKeys(function (User $user): array {
                                     $roles = $user->roles->pluck('name')->join(', ');
 
-                                    return [$user->id => "{$user->name} ({$roles})"];
+                                    return [$user->id => "{$user->name} ({$roles})"]; // @phpstan-ignore-line
                                 })
                                 ->toArray();
                         }),
                 ])
-                ->modalWidth(MaxWidth::Medium)
+                ->modalWidth(Width::Medium)
                 ->action(function (array $data): LoginResponse {
                     $userId = data_get($data, 'user_id');
 
