@@ -54,6 +54,7 @@ class AccessControlSeeder extends Seeder
             '--panel' => 'admin',
             '--resource' => 'UserResource,RoleResource',
             '--ignore-existing-policies' => true,
+            '--option' => 'policies_and_permissions,policies,permissions,tenant_relationships',
         ]);
     }
 
@@ -80,6 +81,7 @@ class AccessControlSeeder extends Seeder
     public function assignRoles(): void
     {
         Artisan::call('shield:super-admin', [
+            '--panel' => 'admin',
             '--user' => 1,
         ]);
 
