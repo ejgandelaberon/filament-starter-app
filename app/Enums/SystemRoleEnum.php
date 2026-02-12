@@ -15,6 +15,6 @@ enum SystemRoleEnum: string
      */
     public static function values(): array
     {
-        return array_map(fn (SystemRoleEnum $role): string => $role->value, self::cases());
+        return array_column(self::cases(), 'value');
     }
 }

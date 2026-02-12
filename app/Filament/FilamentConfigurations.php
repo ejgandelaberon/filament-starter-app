@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament;
 
-use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Tables\Columns\Column;
 
@@ -25,10 +24,6 @@ class FilamentConfigurations
 
     protected function configureTable(): void
     {
-        Action::configureUsing(function (Action $action): void {
-            $action->hiddenLabel()->tooltip(fn (Action $action) => $action->getLabel());
-        }, isImportant: true);
-
         Column::configureUsing(function (Column $column): void {
             $column
                 ->label(fn (?string $state, Column $column): string => str($column->getName())->headline()->toString())

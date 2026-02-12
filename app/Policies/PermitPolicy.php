@@ -6,40 +6,40 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class UserPolicy
+class PermitPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('view-any-user');
+        return $user->can('view-any-permit');
     }
 
     public function view(User $user): bool
     {
-        return $user->can('view-user');
+        return $user->can('view-permit');
     }
 
     public function create(User $user): bool
     {
-        return $user->can('create-user');
+        return $user->can('create-permit');
     }
 
     public function update(User $user): bool
     {
-        return $user->can('update-user');
+        return $user->can('update-permit');
     }
 
     public function delete(User $user): bool
     {
-        return $user->can('delete-user');
+        return $user->can('delete-permit');
     }
 
     public function restore(User $user): bool
     {
-        return $user->can('restore-user');
+        return $user->can('restore-permit');
     }
 
     public function forceDelete(User $user): bool
     {
-        return $user->can('force-delete-user');
+        return $user->can('force-delete-permit');
     }
 }

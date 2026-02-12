@@ -15,12 +15,14 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Override;
 use Spatie\Permission\Models\Role;
 
 class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
 
+    #[Override]
     protected function getHeaderActions(): array
     {
         return [
@@ -30,16 +32,12 @@ class ListUsers extends ListRecords
                 ->visible(fn (): bool => App::isLocal())
                 ->color(Color::Fuchsia)
                 ->authorize(fn (): bool => Auth::user()?->can('create', User::class) ?? false)
-                ->successNotification(function (Notification $notification): Notification {
-                    return $notification
-                        ->title('User created from factory')
-                        ->body('The user has been created from the factory.');
-                })
-                ->failureNotification(function (Notification $notification): Notification {
-                    return $notification
-                        ->title('Failed to create user from factory')
-                        ->body('The user could not be created from the factory.');
-                })
+                ->successNotification(fn (Notification $notification): Notification => $notification
+                    ->title('User created from factory')
+                    ->body('The user has been created from the factory.'))
+                ->failureNotification(fn (Notification $notification): Notification => $notification
+                    ->title('Failed to create user from factory')
+                    ->body('The user could not be created from the factory.'))
                 ->action(function (Action $action): void {
                     try {
                         /** @var User $user */

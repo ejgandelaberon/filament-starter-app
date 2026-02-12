@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Config;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Override;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
@@ -79,6 +80,7 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
      *
      * @return array<string, string>
      */
+    #[Override]
     protected function casts(): array
     {
         return [

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\User;
+
 return [
     'shield_resource' => [
         'should_register_navigation' => true,
@@ -14,7 +16,7 @@ return [
         'is_scoped_to_tenant' => true,
     ],
 
-    'auth_provider_model' => 'App\\Models\\User',
+    'auth_provider_model' => User::class,
 
     'super_admin' => [
         'enabled' => true,

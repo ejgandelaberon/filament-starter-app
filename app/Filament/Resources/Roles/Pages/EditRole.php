@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\Users\Pages;
+namespace App\Filament\Resources\Roles\Pages;
 
-use App\Filament\Resources\Users\UserResource;
+use App\Filament\Resources\Roles\RoleResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Override;
 
-class EditUser extends EditRecord
+class EditRole extends EditRecord
 {
-    protected static string $resource = UserResource::class;
+    protected static string $resource = RoleResource::class;
 
     #[Override]
     protected function getHeaderActions(): array

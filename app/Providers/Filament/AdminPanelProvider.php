@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Exception;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Auth\MultiFactor\Email\EmailAuthentication;
@@ -90,9 +89,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->plugins([
-                FilamentShieldPlugin::make(),
             ])
             ->navigationItems([
                 NavigationItem::make('System Logs')

@@ -6,7 +6,6 @@ namespace App\Filament\Resources\Activities;
 
 use App\Filament\Resources\Activities\Pages\ManageActivities;
 use BackedEnum;
-use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -18,10 +17,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Override;
 use Spatie\Activitylog\Models\Activity;
 use UnitEnum;
 
-class ActivityResource extends Resource implements HasShieldPermissions
+class ActivityResource extends Resource
 {
     protected static ?string $model = Activity::class;
 
@@ -33,11 +33,13 @@ class ActivityResource extends Resource implements HasShieldPermissions
 
     protected static ?string $label = 'Activity Log';
 
+    #[Override]
     public static function canAccess(): bool
     {
         return auth()->user()?->isSuperAdmin() ?? false;
     }
 
+    #[Override]
     public static function infolist(Schema $schema): Schema
     {
         return $schema
@@ -78,6 +80,7 @@ class ActivityResource extends Resource implements HasShieldPermissions
             ]);
     }
 
+    #[Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -113,23 +116,14 @@ class ActivityResource extends Resource implements HasShieldPermissions
                     ->tooltip('View Changes')
                     ->icon('heroicon-o-eye'),
             ])
-            ->modifyQueryUsing(function (Builder $query) {
-                return $query->with(['causer', 'subject']);
-            });
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['causer', 'subject']));
     }
 
+    #[Override]
     public static function getPages(): array
     {
         return [
             'index' => ManageActivities::route('/'),
         ];
-    }
-
-    /**
-     * @return string[]
-     */
-    public static function getPermissionPrefixes(): array
-    {
-        return [];
     }
 }

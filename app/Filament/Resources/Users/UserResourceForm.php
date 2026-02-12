@@ -7,11 +7,12 @@ namespace App\Filament\Resources\Users;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Component;
 
 class UserResourceForm
 {
     /**
-     * @return \Filament\Schemas\Components\Component[]
+     * @return Component[]
      */
     public static function make(): array
     {
