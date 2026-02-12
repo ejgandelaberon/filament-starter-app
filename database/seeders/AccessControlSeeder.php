@@ -34,7 +34,7 @@ class AccessControlSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Super Admin',
-            'email' => "superadmin$domain",
+            'email' => "super-admin$domain",
             'system' => true,
         ]);
 

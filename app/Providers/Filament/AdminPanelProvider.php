@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
-use App\Filament\LoginPage;
-use App\Filament\Pages\ProfileInformation;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Exception;
+use Filament\Auth\MultiFactor\App\AppAuthentication;
+use Filament\Auth\MultiFactor\Email\EmailAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -59,9 +59,12 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login(LoginPage::class)
-            ->profile(ProfileInformation::class, isSimple: false)
-            ->font('Poppins')
+            ->profile()
+            ->login()
+            ->multiFactorAuthentication([
+                AppAuthentication::make()->recoverable(),
+                EmailAuthentication::make(),
+            ])
             ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

@@ -16,7 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    'domain' => env('APP_DOMAIN'),
+    'domain' => env('APP_DOMAIN', '@filament.dev'),
 
     /*
     |--------------------------------------------------------------------------
